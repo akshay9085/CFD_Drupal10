@@ -1,0 +1,34 @@
+#openplc_jumbo{
+    background-color: white;
+    padding: 0.5em 0.6em;
+    h1 {font-size: 2em;}
+    p {  font-size: 1.2em;
+        .btn {padding: 0.5em;}}
+    border: 2px solid red;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    }
+#openplc_jumbo  h3{
+	color: #343434;
+	font-weight: normal;
+	font-family: 'Ultra', sans-serif;
+	font-size: 36px;
+	line-height: 42px;
+	text-transform: uppercase;
+    text-shadow: 0 2px white, 0 3px #777;
+    display:inline;
+    float:right;
+    margin-top: 15px;
+}
+ol, ul {
+    margin-top: 0;
+    margin-bottom: 10px;
+/*    padding-left: 0px;*/
+}
+#openplc_nav{
+    margin-bottom: 0px;
+}
+/* FLex Slider Nav Next Prev Button */
+.flexslider .flex-direction-nav a {
+    display: none;
+    }

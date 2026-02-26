@@ -1,0 +1,8 @@
+<ul>
+{% for row in content['#view'].result %}
+
+  <li>{{ content['#view'].field['carousal_images'].value(row) }} </li>
+  // change field_name to the actual field machine name.
+
+{% endfor %}
+</ul>

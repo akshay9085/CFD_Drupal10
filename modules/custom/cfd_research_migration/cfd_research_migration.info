@@ -1,0 +1,8 @@
+name = "CFD Research Migration"
+description = "CFD Research Migration Project, FOSSEE, IIT Bombay"
+package = FOSSEE
+core = 8.x
+core_version_requirement =  ^8 || ^9
+type = module
+
+;scripts[] = js/jquery-1.4.1.min.js

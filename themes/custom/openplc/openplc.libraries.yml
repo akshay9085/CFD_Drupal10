@@ -1,0 +1,30 @@
+# Global Js And Css
+global-styling:
+  version: 1.x
+  css:
+    theme:
+      css/header.css: {}
+      css/style.css: {}
+
+global-scripts:
+  version: 1.x
+  js:
+    js/nav.js: {}
+
+# BootStrap
+bootstrap:
+  version: 1.x
+  css:
+    theme:
+      includes/bootstrap/css/bootstrap.min.css: {}
+  js:
+    includes/bootstrap/js/bootstrap.min.js: {}
+  dependencies:
+    - core/jquery
+
+# Font awesome
+fontawesome:
+  version: 1.x
+  css:
+    theme:
+      includes/fontawesome/css/fontawesome-all.css: {}

@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Theme override to display a region.
+ *
+ * Available variables:
+ * - content: The content for this region, typically blocks.
+ * - attributes: HTML attributes for the region div.
+ * - region: The name of the region variable as defined in the theme's
+ *   .info.yml file.
+ *
+ * @see template_preprocess_region()
+ */
+#}
+
+   <div id="footer" style="background: black;margin-top:100px;">
+       <div class="container">
+           <div class="row" style="margin-top:5px;">
+                 <div class="col-md-4">
+                   <center>
+                    <a href="https://fossee.in" target="_blank"><img style=" width:150px;background: #fff;"src="{{ base_path ~ directory }}/image/fossee-logo.png"/><a/>
+                   </center>
+                 </div>
+                 <div class="col-md-4">
+                   <center>
+                        <a href="https://www.iitb.ac.in/" target="_blank"><img style="width: 80px;height: 80px;" src="{{ base_path ~ directory }}/image/iitb-logo.png"/><a/>
+                   </center>
+                 </div>
+                 <div class="col-md-4">
+                   <center>
+                        <a href="https://mhrd.gov.in/ict-initiatives" target="_blank"><img style="width: 150px;background: #fff;height: 55px;"src="{{ base_path ~ directory }}/image/NMEICT.png"/></a>
+                   </center>
+                 </div>
+               </div>
+               <div class="row">
+                  <p><center><p style="color:#fff">This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License</p></center></p>
+                  <center><a href='https://creativecommons.org/licenses/by-sa/4.0/'/><img src="{{ base_path ~ directory }}/image/footer_license.png" ></a></center>
+               </div>
+       </div>
+   </div>

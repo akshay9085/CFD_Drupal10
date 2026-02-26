@@ -1,0 +1,105 @@
+cfd_case_study.add_project_title_form:
+  route_name: cfd_case_study.add_project_title_form
+  title: 'Add new project titles'
+  description: 'Add new project titles'
+cfd_case_study.proposal_form:
+  route_name: cfd_case_study.proposal_form
+  title: 'Case Study Proposal Form'
+  description: 'Case Study Proposal Form'
+cfd_case_study.proposal_pending:
+  route_name: cfd_case_study.proposal_pending
+  title: 'Manage Case Study Proposals'
+  description: 'Manage Case StudyProposals'
+cfd_case_study.proposal_pending_0:
+  route_name: cfd_case_study.proposal_pending
+  title: 'Pending Proposals'
+  weight: 1
+  description: 'Pending Case Study Proposals Queue'
+cfd_case_study.proposal_all:
+  route_name: cfd_case_study.proposal_all
+  title: 'All Proposals'
+  weight: 4
+  description: 'All Proposals'
+cfd_case_study.proposal_edit_file_all:
+  route_name: cfd_case_study.proposal_edit_file_all
+  title: 'Edit code files'
+  weight: 4
+  description: 'Edit code files'
+cfd_case_study.proposal_approval_form:
+  route_name: cfd_case_study.proposal_approval_form
+  title: 'Approve Proposal'
+  description: 'Approve Proposal'
+cfd_case_study.proposal_edit_form:
+  route_name: cfd_case_study.proposal_edit_form
+  title: 'Edit Proposal'
+  description: 'Edit Proposal'
+cfd_case_study.proposal_status_form:
+  route_name: cfd_case_study.proposal_status_form
+  title: 'Proposal Status'
+  description: 'Proposal Status'
+cfd_case_study.abstract_bulk_approval_form:
+  route_name: cfd_case_study.abstract_bulk_approval_form
+  title: 'CS Manage Code'
+  weight: 2
+  description: 'Bulk Mangage'
+cfd_case_study.edit_upload_abstract_code_form:
+  route_name: cfd_case_study.edit_upload_abstract_code_form
+  title: 'Case Study Project Directory edit uploaded files for proposal'
+  weight: 2
+  description: 'Project Edit Upload'
+  parent: cfd_case_study.abstract
+cfd_case_study.abstract:
+  route_name: cfd_case_study.abstract
+  title: 'Case Study Project Directory Submission'
+  description: 'Abstract Submission'
+cfd_case_study.upload_abstract_code_form:
+  route_name: cfd_case_study.upload_abstract_code_form
+  title: 'Case Study Project Directory Submission'
+  weight: 2
+  description: 'Project Upload'
+  parent: cfd_case_study.abstract
+cfd_case_study.download_full_project:
+  route_name: cfd_case_study.download_full_project
+  title: 'Code Download'
+  description: 'Code Download'
+cfd_case_study.completed_proposals_all:
+  route_name: cfd_case_study.completed_proposals_all
+  title: 'Completed Case studies'
+cfd_case_study.progress_all:
+  route_name: cfd_case_study.progress_all
+  title: 'Case studies in Progress'
+cfd_case_study.list_of_available_project_titles:
+  route_name: cfd_case_study.list_of_available_project_titles
+  title: 'List of available Project titles'
+cfd_case_study.run_form:
+  route_name: cfd_case_study.run_form
+  title: 'Download Codes'
+cfd_case_study.download_upload_file:
+  route_name: cfd_case_study.download_upload_file
+  title: 'Download user defined compound file'
+  description: 'Download resource file'
+cfd_case_study.download_case_study_project_title_files:
+  route_name: cfd_case_study.download_case_study_project_title_files
+  title: 'Download Project Title file'
+  description: 'Download Project Title file'
+cfd_case_study.project_files:
+  route_name: cfd_case_study.project_files
+  title: 'Download Project file'
+  description: 'Download project file'
+cfd_case_study.settings_form:
+  route_name: cfd_case_study.settings_form
+  title: 'Case Study Settings'
+  description: 'Case Study Settings'
+cfd_case_study._list_case_study_certificates:
+  route_name: cfd_case_study._list_case_study_certificates
+  title: 'List of Case Study Certificates'
+  description: 'List of Case Study Certificates'
+cfd_case_study.generate_pdf:
+  route_name: cfd_case_study.generate_pdf
+  title: 'Download Certificate'
+  description: 'Download Certificate'
+  parent: cfd_case_study._list_case_study_certificates
+cfd_case_study.verify_certificates_verify_certificates:
+  route_name: cfd_case_study.verify_certificates_verify_certificates
+  title: 'Certificate Verification'
+  parent: cfd_case_study._list_case_study_certificates

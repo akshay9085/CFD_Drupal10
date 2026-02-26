@@ -1,0 +1,79 @@
+.fas fa-forward{
+ padding-top: 62px;
+}
+.fas fa-backward{
+    padding-top: 62px;
+   }
+
+
+/* Styling Link for menu--resources.html.twig */
+
+.menu_link a{
+    color: azure;
+    text-decoration: none !important;
+
+}
+.menu_link  a:hover {
+    color: #fff;
+}
+#block-download-menu{
+    background: #086821;
+    color:white;
+}
+
+/* Nav Bar SuperFish */
+#superfish-main {
+    background: black;
+   }
+#superfish-main >li>a{
+      color:white;
+      text-decoration: none;
+      font-family: monospace;
+      font-size: 14px;
+  }
+#superfish-main >li>a:hover{
+      color:white;
+      background: orangered;
+  }
+
+  /* Mobile View SuperFish */
+#superfish-main-accordion {
+    background: black;
+   }
+#superfish-main-accordion >li>a{
+      color:white;
+      text-decoration: none;
+      font-family: monospace;
+      font-size: 14px;
+  }
+#superfish-main-accordion >li>a:hover{
+      color:white;
+      background: orangered;
+  }
+
+
+ /* SuperFish Children */
+
+.sf-menu li li {
+    background:orangered;
+    color: white;
+}
+.sf-menu li li:hover{
+    background: grey;
+
+}
+.sf-menu li li a{
+    /* box color for second-level menu items */
+    color: white;
+    font-family: monospace;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.sf-accordion-toggle.sf-style-none {
+    background: #000 !important;
+}
+
+.btn{
+    background: #e5f5cb !important;
+}

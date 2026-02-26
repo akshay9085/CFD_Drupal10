@@ -1,0 +1,127 @@
+cfd_research_migration.add_lecture_videos_form:
+  route_name: cfd_research_migration.add_lecture_videos_form
+  title: 'Add Lecture Video'
+  description: 'Add new lecture video'
+  parent: cfd_research_migration.view_lecture_videos
+cfd_research_migration.manage_lecture_videos:
+  route_name: cfd_research_migration.manage_lecture_videos
+  title: 'Manage Lecture Videos'
+  parent: cfd_research_migration.view_lecture_videos
+cfd_research_migration.view_lecture_videos:
+  route_name: cfd_research_migration.view_lecture_videos
+  title: 'Lecture Video'
+  description: 'View lecture video'
+cfd_research_migration.edit_lecture_videos_form:
+  route_name: cfd_research_migration.edit_lecture_videos_form
+  title: 'Edit Lecture Videos'
+  parent: cfd_research_migration.view_lecture_videos
+cfd_research_migration.add_project_title_form:
+  route_name: cfd_research_migration.add_project_title_form
+  title: 'Add new project titles'
+  description: 'Add new project titles'
+cfd_research_migration.proposal_form:
+  route_name: cfd_research_migration.proposal_form
+  title: 'Research Migration Project Proposal Form'
+  description: 'Research Migration Proposal Form'
+cfd_research_migration.proposal_pending:
+  route_name: cfd_research_migration.proposal_pending
+  title: 'Manage Research Migration Proposals'
+  description: 'Manage Research Migration Proposals'
+cfd_research_migration.proposal_pending_0:
+  route_name: cfd_research_migration.proposal_pending
+  title: 'Pending Proposals'
+  weight: 1
+  description: 'Pending Research Migration Proposals Queue'
+cfd_research_migration.proposal_all:
+  route_name: cfd_research_migration.proposal_all
+  title: 'All Proposals'
+  weight: 4
+  description: 'All Proposals'
+cfd_research_migration.proposal_edit_file_all:
+  route_name: cfd_research_migration.proposal_edit_file_all
+  title: 'Edit code files'
+  weight: 4
+  description: 'Edit code files'
+cfd_research_migration.proposal_approval_form:
+  route_name: cfd_research_migration.proposal_approval_form
+  title: 'Approve Proposal'
+  description: 'Approve Proposal'
+cfd_research_migration.proposal_edit_form:
+  route_name: cfd_research_migration.proposal_edit_form
+  title: 'Edit Proposal'
+  description: 'Edit Proposal'
+cfd_research_migration.proposal_status_form:
+  route_name: cfd_research_migration.proposal_status_form
+  title: 'Proposal Status'
+  description: 'Proposal Status'
+cfd_research_migration.abstract_bulk_approval_form:
+  route_name: cfd_research_migration.abstract_bulk_approval_form
+  title: 'Research Migration Manage Code'
+  weight: 2
+  description: 'Bulk Mangage'
+cfd_research_migration.edit_upload_abstract_code_form:
+  route_name: cfd_research_migration.edit_upload_abstract_code_form
+  title: 'Research Migration Project Directory edit uploaded files for proposal'
+  weight: 2
+  description: 'Project Edit Upload'
+  parent: cfd_research_migration.abstract
+cfd_research_migration.abstract:
+  route_name: cfd_research_migration.abstract
+  title: 'Research Migration Project Directory Submission'
+  description: 'Abstract Submission'
+cfd_research_migration.upload_abstract_code_form:
+  route_name: cfd_research_migration.upload_abstract_code_form
+  title: 'Research Migration Project Directory Submission'
+  weight: 2
+  description: 'Project Upload'
+  parent: cfd_research_migration.abstract
+cfd_research_migration.upload_code_delete:
+  route_name: cfd_research_migration.upload_code_delete
+  title: 'Delete Solution'
+  description: 'Delete Solution'
+  parent: cfd_research_migration.abstract
+cfd_research_migration.download_full_project:
+  route_name: cfd_research_migration.download_full_project
+  title: 'Code Download'
+  description: 'Code Download'
+cfd_research_migration.completed_proposals_all:
+  route_name: cfd_research_migration.completed_proposals_all
+  title: 'Completed Research Migration'
+cfd_research_migration.progress_all:
+  route_name: cfd_research_migration.progress_all
+  title: 'Research Migration in Progress'
+cfd_research_migration.list_of_available_project_titles:
+  route_name: cfd_research_migration.list_of_available_project_titles
+  title: 'List of available project titles'
+cfd_research_migration.run_form:
+  route_name: cfd_research_migration.run_form
+  title: 'Download Codes'
+cfd_research_migration.download_upload_file:
+  route_name: cfd_research_migration.download_upload_file
+  title: 'Download user defined compound file'
+  description: 'Download resource file'
+cfd_research_migration.download_research_migration_project_title_files:
+  route_name: cfd_research_migration.download_research_migration_project_title_files
+  title: 'Download Project Title file'
+  description: 'Download Project Title file'
+cfd_research_migration.project_files:
+  route_name: cfd_research_migration.project_files
+  title: 'Download Project file'
+  description: 'Download project file'
+cfd_research_migration.settings_form:
+  route_name: cfd_research_migration.settings_form
+  title: 'Research Migration Settings'
+  description: 'Research Migration Settings'
+cfd_research_migration._list_research_migration_certificates:
+  route_name: cfd_research_migration._list_research_migration_certificates
+  title: 'List of Research Migration Project Certificates'
+  description: 'List of Research Migration Project Certificates'
+cfd_research_migration.generate_pdf:
+  route_name: cfd_research_migration.generate_pdf
+  title: 'Download Certificate'
+  description: 'Download Certificate'
+  parent: cfd_research_migration._list_research_migration_certificates
+cfd_research_migration.verify_certificates_verify_certificates:
+  route_name: cfd_research_migration.verify_certificates_verify_certificates
+  title: 'Certificate Verification'
+  parent: cfd_research_migration._list_research_migration_certificates

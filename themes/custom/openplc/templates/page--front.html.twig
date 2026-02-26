@@ -1,0 +1,67 @@
+ {% set has_sidebar_first = page.sidebar_first|render|striptags|trim is not empty %}
+{% set has_sidebar_second = page.sidebar_second|render|striptags|trim is not empty %}
+
+ <div class="container-fluid" style="background: #e5f5cb;">
+    {{page.banner}}
+    <header role="banner">
+      {{ page.header }}
+    </header>
+
+    {{ page.primary_menu }}
+    {{ page.secondary_menu }}
+
+    {{ page.openplc_corousal }}
+
+    {{ page.highlighted }}
+    {{ page.help }}
+    {{ page.breadcrumb }}
+    <main role="main">
+        <a id="main-content" tabindex="-1">
+        </a>
+            <div class="container-fluid">
+                <div class="row">
+                    {% if (has_sidebar_first and has_sidebar_second) %}
+                        {% if has_sidebar_first %}
+                                <div class="col-sm-3"  role="complementary">
+                                    {{ page.sidebar_first }}
+                                </div>
+                        {% endif %}
+                            <div class="col-sm-6">
+                                {{ page.content }}
+                            </div>{# /.layout-content #}
+                        {% if has_sidebar_second  %}
+                                <div class="col-sm-3" style="float: right;"  role="complementary">
+                                    {{ page.sidebar_second }}
+                                </div>
+                        {% endif %}
+                    {% elseif (has_sidebar_first or has_sidebar_second)  %}
+                        {% if has_sidebar_first %}
+                                <div class="col-sm-3"  role="complementary">
+                                    {{ page.sidebar_first }}
+                                </div>
+                            <div class="col-sm-9">
+                                {{ page.content }}
+                            </div>{# /.layout-content #}
+                        {% elseif has_sidebar_second  %}
+                            <div class="col-sm-9">
+                                {{ page.content }}
+                            </div>{# /.layout-content #}
+                            <div class="col-sm-3" style="float: right;"  role="complementary">
+                                {{ page.sidebar_second }}
+                            </div>
+                        {% else %}
+                            <div class="col-xl-12 ">
+                                {{ page.content }}
+                            </div>{# /.layout-content #}
+                        {% endif %}
+                    {% else %}
+                        <div class="col-xl-12 ">
+                            {{ page.content }}
+                        </div>{# /.layout-content #}
+                    {% endif %}
+                </div>
+            </div>
+    </main>
+
+    {{ page.footer }}
+  </div>{#/.layout-container #}

@@ -1,0 +1,17 @@
+cfd_case_study.proposal_pending_tab:
+  route_name: cfd_case_study.proposal_pending
+  title: 'Pending proposals'
+  base_route: cfd_case_study.proposal_pending
+  weight: 0
+
+cfd_case_study.proposal_all_tab:
+  route_name: cfd_case_study.proposal_all
+  title: 'All proposals'
+  base_route: cfd_case_study.proposal_pending
+  weight: 1
+
+cfd_case_study.proposal_edit_file_all_tab:
+  route_name: cfd_case_study.proposal_edit_file_all
+  title: 'Edit code files'
+  base_route: cfd_case_study.proposal_pending
+  weight: 2

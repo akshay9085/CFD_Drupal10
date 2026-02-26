@@ -1,0 +1,1024 @@
+<?php
+// $Id$
+/*error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);*/
+// require_once 'general_deletion.inc';
+// require_once 'email.inc';
+/**
+ * Implementation of hook_menu().
+ */
+function cfd_case_study_menu()
+{
+    $items = array();
+    /* PROPOSAL */
+    $items['case-study-project/add-project-title'] = array(
+        'title' => 'Add new project titles',
+        'description' => 'Add new project titles',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'add_project_title_form',
+        ),
+        'access arguments' => array(
+            'Case Study add project titles',
+        ),
+        //'type' => MENU_NORMAL_ITEM,
+        'file' => 'add_project_titles.inc',
+    );
+    $items['case-study-project/proposal'] = array(
+        'title' => 'Case Study Proposal Form',
+        'description' => 'Case Study Proposal Form',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_proposal_form',
+        ),
+        'access arguments' => array(
+            'Case Study create proposal',
+        ),
+        //'type' => MENU_NORMAL_ITEM,
+        'file' => 'proposal.inc',
+    );
+    $items['case-study-project/manage-proposal'] = array(
+        'title' => 'Manage Case Study Proposals',
+        'description' => 'Manage Case StudyProposals',
+        'page callback' => 'cfd_case_study_proposal_pending',
+        'access callback' => 'user_access',
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/pending'] = array(
+        'title' => 'Pending Proposals',
+        'description' => 'Pending Case Study Proposals Queue',
+        'page callback' => 'cfd_case_study_proposal_pending',
+        'access callback' => 'user_access',
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        //'type' => MENU_DEFAULT_LOCAL_TASK,
+        'weight' => 1,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/all'] = array(
+        'title' => 'All Proposals',
+        'description' => 'All Proposals',
+        'page callback' => 'cfd_case_study_proposal_all',
+        'access callback' => 'user_access',
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        //'type' => MENU_LOCAL_TASK,
+        'weight' => 4,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/edit-upload-file'] = array(
+        'title' => 'Edit code files',
+        'description' => 'Edit code files',
+        'page callback' => 'cfd_case_study_proposal_edit_file_all',
+        'access callback' => 'user_access',
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        //'type' => MENU_LOCAL_TASK,
+        'weight' => 4,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/approve'] = array(
+        'title' => 'Approve Proposal',
+        'description' => 'Approve Proposal',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_proposal_approval_form',
+        ),
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/edit'] = array(
+        'title' => 'Edit Proposal',
+        'description' => 'Edit Proposal',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_proposal_edit_form',
+        ),
+        'access arguments' => array(
+            'Case Study manage proposal',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/manage-proposal/status'] = array(
+        'title' => 'Proposal Status',
+        'description' => 'Proposal Status',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_proposal_status_form',
+        ),
+        'access arguments' => array(
+            'Case Study approve proposal',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'manage_proposal.inc',
+    );
+    $items['case-study-project/abstract-approval/bulk'] = array(
+        'title' => 'CS Manage Code',
+        'description' => 'Bulk Mangage',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_abstract_bulk_approval_form',
+        ),
+        'access arguments' => array(
+            'Case Study bulk manage abstract',
+        ),
+        //'type' => MENU_LOCAL_TASK,
+        'weight' => 2,
+        'file' => 'abstract_bulk_approval.inc',
+    );
+    /* CODE UPLOAD */
+    $items['case-study-project/abstract-code/edit-upload-files'] = array(
+        'title' => 'Case Study Project Directory edit uploaded files for proposal',
+        'description' => 'Project Edit Upload',
+        'page callback' => 'drupal_get_form',
+        'access callback' => 'user_access',
+        'page arguments' => array(
+            'cfd_case_study_edit_upload_abstract_code_form',
+        ),
+        'access arguments' => array(
+            'Case Study upload abstract',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'upload_code.inc',
+        'weight' => 2,
+    );
+    $items['case-study-project/abstract-code'] = array(
+        'title' => 'Case Study Project Directory Submission',
+        'description' => 'Abstract Submission',
+        'page callback' => 'cfd_case_study_abstract',
+        'access callback' => 'user_access',
+        'access arguments' => array(
+            'Case Study upload abstract',
+        ),
+        'file' => 'upload_code.inc',
+    );
+    $items['case-study-project/abstract-code/upload'] = array(
+        'title' => 'Case Study Project Directory Submission',
+        'description' => 'Project Upload',
+        'page callback' => 'drupal_get_form',
+        'access callback' => 'user_access',
+        'page arguments' => array(
+            'cfd_case_study_upload_abstract_code_form',
+        ),
+        'access arguments' => array(
+            'Case Study upload abstract',
+        ),
+        //'type' => MENU_LOCAL_TASK,
+        'file' => 'upload_code.inc',
+        'weight' => 2,
+    );
+    // $items['case-study-project/abstract-code/delete'] = array(
+    //     'title' => 'Delete Solution',
+    //     'description' => 'Delete Solution',
+    //     'page callback' => 'cfd_case_study_upload_code_delete',
+    //     'access arguments' => array(
+    //         'Case Study upload code',
+    //     ),
+    //     //'type' => MENU_CALLBACK,
+    //     'file' => 'upload_code_delete.inc',
+    // );
+    /* CODE DOWNLOADS */
+    $items['case-study-project/full-download/project'] = array(
+        'title' => 'Code Download',
+        'description' => 'Code Download',
+        'page callback' => 'cfd_case_study_download_full_project',
+        'access arguments' => array(
+            'Case Study download code',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'full_download.inc',
+    );
+    /* COMPLETED  Case studies */
+    $items['case-study-project/completed-case-studies'] = array(
+        'title' => 'Completed Case studies',
+        'page callback' => 'cfd_case_study_completed_proposals_all',
+        'access arguments' => array(
+            'Case Study download code',
+        ),
+        'file' => 'cfd_case_study_details.inc',
+    );
+    /* LABS IN PROGRESS */
+    $items['case-study-project/case-study-progress'] = array(
+        'title' => 'Case studies in Progress',
+        'page callback' => 'cfd_case_study_progress_all',
+        'access arguments' => array(
+            'Case Study download code',
+        ),
+        'file' => 'cfd_case_study_details.inc',
+    );
+    $items['case-study-project/list-of-project-titles'] = array(
+        'title' => 'List of available Project titles',
+        'page callback' => 'list_of_available_project_titles',
+        'access arguments' => array(
+            'Case Study Project titles list',
+        ),
+        'file' => 'available_project_titles_list.inc',
+    );
+    /* DOWNLOAD FOR EVERYONE */
+    $items['case-study-project/case-study-run'] = array(
+        'title' => 'Download Codes',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_run_form',
+        ),
+        'access arguments' => array(
+            'Case Study download code',
+        ),
+        //'type' => MENU_NORMAL_ITEM,
+        'file' => 'run.inc',
+    );
+    $items['case-study-project/download/resource-file'] = array(
+        'title' => 'Download user defined compound file',
+        'description' => 'Download resource file',
+        'page callback' => 'cfd_case_study_download_upload_file',
+        'access arguments' => array(
+            'download code',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'download.inc',
+    );
+    $items['case-study-project/download/project-title-file'] = array(
+        'title' => 'Download Project Title file',
+        'description' => 'Download Project Title file',
+        'page callback' => 'download_case_study_project_title_files',
+        'access arguments' => array(
+            'download code',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'available_project_titles_list.inc',
+    );
+    $items['case-study-project/download/project-file'] = array(
+        'title' => 'Download Project file',
+        'description' => 'Download project file',
+        'page callback' => 'cfd_case_study_project_files',
+        'access arguments' => array(
+            'download code',
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'download.inc',
+    );
+    /* ADMIN SETTINGS */
+    $items['admin/settings/case-study'] = array(
+        'title' => 'Case Study Settings',
+        'description' => 'Case Study Settings',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'cfd_case_study_settings_form',
+        ),
+        'access arguments' => array(
+            'administer  Case Study',
+        ),
+        //'type' => MENU_NORMAL_ITEM,
+        'file' => 'settings.inc',
+    );
+    /* AJAX REQUEST */
+    $items['case-study-project/certificates'] = array(
+        'title' => 'List of Case Study Certificates',
+        'description' => 'List of Case Study Certificates',
+        'page callback' => '_list_case_study_certificates',
+        'access arguments' => array(
+            'list Case Study certificates',
+        ),
+        'file' => 'pdf/list_case_study_certificate.inc',
+    );
+    $items['case-study-project/certificates/generate-pdf'] = array(
+        'title' => 'Download Certificate',
+        'description' => 'Download Certificate',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array(
+            'generate_pdf',
+        ),
+        //'type' => MENU_CALLBACK,
+        'access arguments' => array(
+            'generate pdf',
+        ),
+        'file' => 'pdf/cert_new.inc',
+    );
+    /*$items['case-study-project/certificates-custom'] = array(
+    'title'=> 'List of Case Study Custom Certificates',
+    'description'=> 'List of Case Study Custom Certificates',
+    'page callback'=> '_list_cfd_case_study_custom_certificates',
+    'access arguments'=> array(
+    'list Case Study custom certificates'
+    ),
+    'file'=> 'pdf/list_mentor_certificates.inc'
+    );
+    $items['case-study-project/certificates-custom/pdf'] = array(
+    'title'=> 'Download Certificate',
+    'description'=> 'Download Certificate',
+    'page callback'=> 'drupal_get_form',
+    'page arguments'=> array(
+    'generate_pdf'
+    ),
+    'type'=> MENU_CALLBACK,
+    'access arguments'=> array(
+    'generate pdf'
+    ),
+    'file'=> 'pdf/mentor_cert_pdf.inc'
+    ); */
+    $items['case-study-project/certificates/verify'] = array(
+        "title" => "Certificate Verification",
+        "page callback" => "verify_certificates",
+        'page arguments' => array(
+            'verify_certificates',
+        ),
+        "access arguments" => array(
+            "verify certificates",
+        ),
+        //'type' => MENU_CALLBACK,
+        'file' => 'pdf/verify_certificates.inc',
+    );
+    return $items;
+}
+/**
+ * Implementation of hook_perm().
+ */
+function cfd_case_study_permission()
+{
+    return array(
+        'Case Study add project titles' => array(
+            'title' => t('Case Study add project titles'),
+            'restrict access' => true,
+        ),
+        'Case Study create proposal' => array(
+            'title' => t('Case Study create proposal'),
+            'restrict access' => true,
+        ),
+        'Case Study manage proposal' => array(
+            'title' => t('Case Study manage proposal'),
+            'restrict access' => true,
+        ),
+        'Case Study edit proposal' => array(
+            'title' => t('Case Study edit proposal'),
+            'restrict access' => true,
+        ),
+        'Case Study approve proposal' => array(
+            'title' => t('Case Study approve proposal'),
+            'restrict access' => true,
+        ),
+        'Case Study propose solution' => array(
+            'title' => t('Case Study propose solution'),
+            'restrict access' => true,
+        ),
+        'Case Study Project titles list' => array(
+            'title' => t('Case Study Project titles list'),
+            'restrict access' => true,
+        ),
+        'Case Study approve abstract' => array(
+            'title' => t('Case Study approve code'),
+            'restrict access' => true,
+        ),
+        'Case Study bulk manage abstract' => array(
+            'title' => t('Case Study bulk manage abstract'),
+            'restrict access' => true,
+        ),
+        'Case Study bulk delete abstract' => array(
+            'title' => t('Case Study bulk delete code'),
+            'restrict access' => true,
+        ),
+        'Case Study upload abstract' => array(
+            'title' => t('Case Study upload code'),
+            'restrict access' => true,
+        ),
+        'Case Study download code' => array(
+            'title' => t('Case Study download code'),
+            'restrict access' => true,
+        ),
+        'administer  Case Study' => array(
+            'title' => t('administer  Case Study'),
+            'restrict access' => true,
+        ),
+        'Case Study generate abstract' => array(
+            'title' => t('Case Study generate abstract'),
+            'restrict access' => true,
+        ),
+        "list Case Study certificates" => array(
+            "title" => t("list the certificates"),
+            "description" => t("list the certificates"),
+            'restrict access' => true,
+        ),
+        "list Case Study custom certificates" => array(
+            "title" => t("list the mentor certificates"),
+            "description" => t("list the mentor certificates"),
+            'restrict access' => true,
+        ),
+        "verify certificates" => array(
+            "title" => t("verify the certificates"),
+            "description" => t("verify the certificates"),
+            'restrict access' => true,
+        ),
+
+    );
+}
+/*************************** VALIDATION FUNCTIONS *****************************/
+function cfd_case_study_check_valid_filename($file_name)
+{
+    if (!preg_match('/^[0-9a-zA-Z\.\_]+$/', $file_name)) {
+        return false;
+    } else if (substr_count($file_name, ".") > 1) {
+        return false;
+    } else {
+        return true;
+    }
+
+}
+function cfd_case_study_check_name($name = '')
+{
+    if (!preg_match('/^[0-9a-zA-Z\ ]+$/', $name)) {
+        return false;
+    } else {
+        return true;
+    }
+
+}
+function cfd_case_study_check_code_number($number = '')
+{
+    if (!preg_match('/^[0-9]+$/', $number)) {
+        return false;
+    } else {
+        return true;
+    }
+
+}
+// function cfd_case_study_check_valid_filename($file_name = '')
+// {
+//     return (bool) preg_match('/^[A-Za-z0-9._-]+$/', $file_name);
+// }
+function cfd_case_study_path()
+{
+    return $_SERVER['DOCUMENT_ROOT'] . base_path() . 'cfd_uploads/case_study_uploads/';
+}
+function cfd_case_study_file_path($value = '')
+{
+    return $_SERVER['DOCUMENT_ROOT'] . base_path() . 'cfd_uploads/';
+}
+function cfd_case_study_project_titles_resource_file_path()
+{
+    return $_SERVER['DOCUMENT_ROOT'] . base_path() . 'cfd_uploads/case_project_titles_resource_files/';
+}
+/************************* USER VERIFICATION FUNCTIONS ************************/
+function cfd_case_study_get_proposal()
+{
+    $user = \Drupal::currentUser();
+    $uid = $user->id();
+    $query = \Drupal::database()->select('case_study_proposal');
+    $query->fields('case_study_proposal');
+    $query->condition('uid', $uid);
+    $query->orderBy('id', 'DESC');
+    $query->range(0, 1);
+    $proposal_q = $query->execute();
+    $proposal_data = $proposal_q->fetchObject();
+    if (!$proposal_data) {
+        \Drupal::messenger()->addError("You do not have any approved  Case Study proposal. Please propose a Case Study");
+        // drupal_goto('');
+    } //!$proposal_data
+    switch ($proposal_data->approval_status) {
+        case 0:
+            \Drupal::messenger()->addStatus(t('Proposal is awaiting approval.'));
+            return false;
+        case 1:
+            return $proposal_data;
+        case 2:
+            \Drupal::messenger()->addError(t('Proposal has been dis-approved.'));
+            return false;
+        case 3:
+            \Drupal::messenger()->addStatus(t('Proposal has been marked as completed.'));
+            return false;
+        default:
+            \Drupal::messenger()->addError(t('Invalid proposal state. Please contact site administrator for further information.'));
+            return false;
+    } //$proposal_data->approval_status
+    return false;
+}
+/*************************************************************************/
+/***** Function To convert only first charater of string in uppercase ****/
+/*************************************************************************/
+function ucname($string)
+{
+$string = ucwords(strtolower($string));
+foreach (array(
+'-',
+'\''
+) as $delimiter)
+{
+if (strpos($string, $delimiter) !== false)
+{
+$string = implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+} //strpos($string, $delimiter) !== false
+} //array( '-', '\'') as $delimiter
+return $string;
+}
+function _df_sentence_case($string)
+{
+    $string = ucwords(strtolower($string));
+    foreach (array(
+        '-',
+        '\'',
+    ) as $delimiter) {
+        if (strpos($string, $delimiter) !== false) {
+            $string = implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
+        } //strpos($string, $delimiter) !== false
+    } //array( '-', '\'') as $delimiter
+    return $string;
+}
+function _df_list_of_states()
+{
+    $states = array(
+        0 => '-Select-',
+    );
+    $query = \Drupal::database()->select('list_states_of_india');
+    $query->fields('list_states_of_india');
+    //$query->orderBy('', '');
+    $states_list = $query->execute();
+    while ($states_list_data = $states_list->fetchObject()) {
+        $states[$states_list_data->state] = $states_list_data->state;
+    } //$states_list_data = $states_list->fetchObject()
+    return $states;
+}
+function _df_list_of_cities()
+{
+    $city = array(
+        0 => '-Select-',
+    );
+    $query = \Drupal::database()->select('list_cities_of_india');
+    $query->fields('list_cities_of_india');
+    $query->orderBy('city', 'ASC');
+    $city_list = $query->execute();
+    while ($city_list_data = $city_list->fetchObject()) {
+        $city[$city_list_data->city] = $city_list_data->city;
+    } //$city_list_data = $city_list->fetchObject()
+    return $city;
+}
+function _df_list_of_pincodes()
+{
+    $pincode = array(
+        0 => '-Select-',
+    );
+    $query = \Drupal::database()->select('list_of_all_india_pincode');
+    $query->fields('list_of_all_india_pincode');
+    $query->orderBy('pincode', 'ASC');
+    $pincode_list = $query->execute();
+    while ($pincode_list_data = $pincode_list->fetchObject()) {
+        $pincode[$pincode_list_data->pincode] = $pincode_list_data->pincode;
+    } //$pincode_list_data = $pincode_list->fetchObject()
+    return $pincode;
+}
+function _df_list_of_departments()
+{
+    $department = array();
+    $query = \Drupal::database()->select('list_of_departments');
+    $query->fields('list_of_departments');
+    $query->orderBy('id', 'DESC');
+    $department_list = $query->execute();
+    while ($department_list_data = $department_list->fetchObject()) {
+        $department[$department_list_data->department] = $department_list_data->department;
+    } //$department_list_data = $department_list->fetchObject()
+    return $department;
+}
+
+function _cs_list_of_case_studies() {
+    $existing_case_studies = [];
+    $connection = \Drupal::database();
+
+    $proposal_titles = $connection->select('case_study_proposal', 'csp')
+        ->fields('csp', ['project_title'])
+        ->condition('approval_status', [0, 1, 3], 'IN');
+
+    $query = $connection->select('list_of_project_titles', 'lpt')
+        ->fields('lpt', ['project_title_name']);
+    $query->condition('project_title_name', $proposal_titles, 'NOT IN');
+
+    $result = $query->execute();
+    while ($case_study_list_data = $result->fetchObject()) {
+        $existing_case_studies[$case_study_list_data->project_title_name] = $case_study_list_data->project_title_name;
+    }
+
+    return $existing_case_studies;
+}
+
+function _cs_list_of_versions(){
+    $versions = array();
+    $query = \Drupal::database()->select('case_study_software_version');
+    $query->fields('case_study_software_version');
+    $version_list = $query->execute();
+    while($version_data = $version_list->fetchObject()){
+        $versions[$version_data->id] = $version_data->case_study_version;
+    }
+    return $versions;
+}
+
+function _cs_list_of_simulation_types(){
+    $simulation_types = array();
+    $query = \Drupal::database()->select('case_study_simulation_type');
+    $query->fields('case_study_simulation_type');
+    $simulation_type_list = $query->execute();
+    while ($simulation_type_data = $simulation_type_list->fetchObject()) {
+        $simulation_types[$simulation_type_data->id] = $simulation_type_data->simulation_type;
+    }
+    return $simulation_types;
+}
+
+function _cs_list_of_solvers($simulation_id){
+    $simulation_id = $simulation_id;
+    $solvers = array(
+        0 => '-Select-',
+        );
+    $query = \Drupal::database()->select('case_study_solvers');
+    $query->fields('case_study_solvers');
+    $query->condition('simulation_type_id',$simulation_id);
+    $solvers_list = $query->execute();
+    while($solvers_data = $solvers_list->fetchObject()){
+        $solvers[$solvers_data->solver_name] = $solvers_data->solver_name;
+    }
+    return $solvers;
+}
+
+function _df_dir_name($project, $proposar_name)
+{
+    $project_title = ucname($project);
+    $proposar_name = ucname($proposar_name);
+    $dir_name = $project_title . ' By ' . $proposar_name;
+    $directory_name = str_replace("__", "_", str_replace(" ", "_", str_replace("/", "_", trim($dir_name))));
+    return $directory_name;
+}
+function cfd_case_study_document_path()
+{
+    return $_SERVER['DOCUMENT_ROOT'] . base_path() . 'cfd_uploads/case_study_uploads/';
+}
+function DF_RenameDir($proposal_id, $dir_name)
+{
+    $proposal_id = $proposal_id;
+    $dir_name = $dir_name;
+    $query = \Drupal::database()->query("SELECT directory_name,id FROM case_study_proposal WHERE id = :proposal_id", array(
+        ':proposal_id' => $proposal_id,
+    ));
+    $result = $query->fetchObject();
+    if ($result != null) {
+        $files = scandir(cfd_case_study_path());
+        $files_id_dir = cfd_case_study_path() . $result->id;
+        //var_dump($files);die;
+        $file_dir = cfd_case_study_path() . $result->directory_name;
+        if (is_dir($file_dir)) {
+            $new_directory_name = rename(cfd_case_study_path() . $result->directory_name, cfd_case_study_path() . $dir_name);
+            return $new_directory_name;
+        } //is_dir($file_dir)
+        else if (is_dir($files_id_dir)) {
+            $new_directory_name = rename(cfd_case_study_path() . $result->id, cfd_case_study_path() . $dir_name);
+            return $new_directory_name;
+        } //is_dir($files_id_dir)
+        else {
+            \Drupal::messenger()->addMessage('Directory not available for rename.');
+            return;
+        }
+    } //$result != NULL
+    else {
+        \Drupal::messenger()->addMessage('Project directory name not present in databse');
+        return;
+    }
+    return;
+}
+function CreateReadmeFileCaseStudyProject($proposal_id)
+{
+    $result = \Drupal::database()->query("
+                        SELECT * from case_study_proposal WHERE id = :proposal_id", array(
+        ":proposal_id" => $proposal_id,
+    ));
+    $proposal_data = $result->fetchObject();
+    $root_path = cfd_case_study_path();
+    $readme_file = fopen($root_path . $proposal_data->directory_name . "/README.txt", "w") or die("Unable to open file!");
+    $txt = "";
+    $txt .= "About the Case Study";
+    $txt .= "\n" . "\n";
+    $txt .= "Title Of The Case Study Project: " . $proposal_data->project_title . "\n";
+    $txt .= "Proposar Name: " . $proposal_data->name_title . " " . $proposal_data->contributor_name . "\n";
+    $txt .= "University: " . $proposal_data->university . "\n";
+    $txt .= "\n" . "\n";
+    $txt .= " Case Study Project By FOSSEE, IIT Bombay" . "\n";
+    fwrite($readme_file, $txt);
+    fclose($readme_file);
+    return $txt;
+}
+function rrmdir_project($prop_id)
+{
+    $proposal_id = $prop_id;
+    $result = \Drupal::database()->query("SELECT * from case_study_proposal WHERE id = :proposal_id", array(
+        ":proposal_id" => $proposal_id,
+    ));
+    $proposal_data = $result->fetchObject();
+    $root_path = cfd_case_study_document_path();
+    $dir = $root_path . $proposal_data->directory_name;
+    if ($proposal_data->id == $prop_id) {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir . "/" . $object) == "dir") {
+                        rrmdir($dir . "/" . $object);
+                    } //filetype($dir . "/" . $object) == "dir"
+                    else {
+                        unlink($dir . "/" . $object);
+                    }
+                } //$object != "." && $object != ".."
+            } //$objects as $object
+            reset($objects);
+            rmdir($dir);
+            $msg = \Drupal::messenger()->addMessage("Directory deleted successfully");
+            return $msg;
+        } //is_dir($dir)
+        $msg = \Drupal::messenger()->addMessage("Directory not present");
+        return $msg;
+    } //$proposal_data->id == $prop_id
+    else {
+        $msg = \Drupal::messenger()->addMessage("Data not found");
+        return $msg;
+    }
+}
+function rrmdir($dir)
+{
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dir . "/" . $object) == "dir") {
+                    rrmdir($dir . "/" . $object);
+                } else {
+                    unlink($dir . "/" . $object);
+                }
+
+            } //$object != "." && $object != ".."
+        } //$objects as $object
+        reset($objects);
+        rmdir($dir);
+    } //is_dir($dir)
+}
+
+// function textbook_companion_check_valid_filename($file_name)
+// {
+//     if (!preg_match('/^[0-9a-zA-Z\_\.]+$/', $file_name))
+//         return FALSE;
+//     else if (substr_count($file_name, ".") > 1)
+//         return FALSE;
+//     else
+//         return TRUE;
+// }
+
+/**
+ * Implements hook_mail().
+ */
+function cfd_case_study_mail($key, &$message, $params)
+{
+    $payload = (isset($params[$key]) && is_array($params[$key])) ? $params[$key] : array();
+
+    if (!empty($payload['headers']) && is_array($payload['headers'])) {
+        $message['headers'] = $payload['headers'];
+    }
+
+    if ($key === 'standard') {
+        $message['subject'] = (string) ($payload['subject'] ?? '');
+        $body = $payload['body'] ?? '';
+        $message['body'] = is_array($body) ? $body : array((string) $body);
+        return;
+    }
+
+    $langcode = $message['langcode'] ?? \Drupal::languageManager()->getDefaultLanguage()->getId();
+    $site_name = \Drupal::config('system.site')->get('name') ?: 'FOSSEE';
+
+    $proposal_id = $payload['proposal_id'] ?? $payload['result1'] ?? NULL;
+    $proposal_data = cfd_case_study_load_proposal_for_mail($proposal_id);
+
+    $user_data = NULL;
+    if (!empty($payload['user_id'])) {
+        $user_data = \Drupal::entityTypeManager()->getStorage('user')->load((int) $payload['user_id']);
+    }
+    $user_name = $user_data ? $user_data->getDisplayName() : t('Contributor', array(), array('langcode' => $langcode));
+    $user_email = $user_data ? $user_data->getEmail() : '';
+    $proposal_lines = cfd_case_study_build_common_proposal_lines($proposal_data, $user_email, $langcode);
+
+    switch ($key) {
+        case 'case_study_proposal_received':
+            $message['subject'] = t('[@site_name][Case Study Project] Your case study proposal has been received', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('We have received your case study proposal with the following details:', array(), array('langcode' => $langcode)),
+            );
+            $message['body'] = array_merge($message['body'], $proposal_lines, array(
+                '',
+                t('Your proposal is under review. You will receive an email once it is approved or disapproved.', array(), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            ));
+            break;
+
+        case 'case_study_proposal_disapproved':
+            $reason = cfd_case_study_mail_value(($proposal_data && isset($proposal_data->dissapproval_reason)) ? $proposal_data->dissapproval_reason : '');
+            $message['subject'] = t('[@site_name][Case Study Project] Your case study proposal has been disapproved', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('We regret to inform you that your case study proposal has been disapproved.', array(), array('langcode' => $langcode)),
+                '',
+            );
+            $message['body'] = array_merge($message['body'], $proposal_lines, array(
+                '',
+                t('Reason for rejection: @reason', array('@reason' => $reason), array('langcode' => $langcode)),
+                '',
+                t('You are welcome to submit a new proposal.', array(), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            ));
+            break;
+
+        case 'case_study_proposal_approved':
+            $upload_url = '/case-study-project/abstract-code/upload';
+            try {
+                $upload_url = \Drupal\Core\Url::fromRoute('cfd_case_study.upload_abstract_code_form', array(), array('absolute' => TRUE))->toString();
+            } catch (\Exception $exception) {
+            }
+            $message['subject'] = t('[@site_name][Case Study Project] Your case study proposal has been approved', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('Your case study proposal has been approved with the following details:', array(), array('langcode' => $langcode)),
+                '',
+            );
+            $message['body'] = array_merge($message['body'], $proposal_lines, array(
+                '',
+                t('You can upload your project files at: @url', array('@url' => $upload_url), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            ));
+            break;
+
+        case 'case_study_proposal_completed':
+            $message['subject'] = t('[@site_name][Case Study Project] Your case study proposal has been marked as completed', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('Your case study and abstract submission has been marked as completed successfully.', array(), array('langcode' => $langcode)),
+                '',
+            );
+            $message['body'] = array_merge($message['body'], $proposal_lines, array(
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            ));
+            break;
+
+        case 'case_study_proposal_deleted':
+            $message['subject'] = t('[@site_name][Case Study Project] Your case study proposal has been deleted', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('Your case study proposal has been deleted with the following details:', array(), array('langcode' => $langcode)),
+                '',
+            );
+            $message['body'] = array_merge($message['body'], $proposal_lines, array(
+                '',
+                t('You can submit a new case study proposal anytime.', array(), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            ));
+            break;
+
+        case 'abstract_uploaded':
+            $project_title = cfd_case_study_mail_value(($proposal_data && isset($proposal_data->project_title)) ? $proposal_data->project_title : '');
+            $message['subject'] = t('[@site_name][Case Study Project] Project files uploaded', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('You have uploaded abstract and project files for the following case study:', array(), array('langcode' => $langcode)),
+                t('Project Title: @title', array('@title' => $project_title), array('langcode' => $langcode)),
+                '',
+                t('The files are under review. You will be notified after review.', array(), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            );
+            break;
+
+        case 'abstract_edit_file_uploaded':
+            $project_title = cfd_case_study_mail_value(($proposal_data && isset($proposal_data->project_title)) ? $proposal_data->project_title : '');
+            $abs_file_name = cfd_case_study_mail_value($payload['abs_file'] ?? '');
+            $proj_file_name = cfd_case_study_mail_value($payload['proj_file'] ?? '');
+            $message['subject'] = t('[@site_name][Case Study Project] Case study files updated', array('@site_name' => $site_name), array('langcode' => $langcode));
+            $message['body'] = array(
+                t('Dear @user_name,', array('@user_name' => $user_name), array('langcode' => $langcode)),
+                '',
+                t('You have updated files for the following case study:', array(), array('langcode' => $langcode)),
+                t('Project Title: @title', array('@title' => $project_title), array('langcode' => $langcode)),
+                t('Abstract File: @file', array('@file' => $abs_file_name), array('langcode' => $langcode)),
+                t('Project File: @file', array('@file' => $proj_file_name), array('langcode' => $langcode)),
+                '',
+                t('Best wishes,', array(), array('langcode' => $langcode)),
+                '',
+                t('@site_name Team', array('@site_name' => $site_name), array('langcode' => $langcode)),
+                'FOSSEE, IIT Bombay',
+            );
+            break;
+
+        default:
+            if (isset($payload['subject'])) {
+                $message['subject'] = (string) $payload['subject'];
+            }
+            if (isset($payload['body'])) {
+                $message['body'] = is_array($payload['body']) ? $payload['body'] : array((string) $payload['body']);
+            }
+            break;
+    }
+}
+
+/**
+ * Loads a proposal row for mail templates.
+ */
+function cfd_case_study_load_proposal_for_mail($proposal_id)
+{
+    if (empty($proposal_id)) {
+        return NULL;
+    }
+
+    $query = \Drupal::database()->select('case_study_proposal', 'csp');
+    $query->fields('csp');
+    $query->condition('id', (int) $proposal_id);
+    $query->range(0, 1);
+    $proposal_data = $query->execute()->fetchObject();
+
+    return $proposal_data ?: NULL;
+}
+
+/**
+ * Builds common proposal detail lines for email templates.
+ */
+function cfd_case_study_build_common_proposal_lines($proposal_data, $user_email, $langcode)
+{
+    if (!$proposal_data) {
+        return array(
+            t('Proposal details are unavailable.', array(), array('langcode' => $langcode)),
+        );
+    }
+
+    $full_name = trim(($proposal_data->name_title ?? '') . ' ' . ($proposal_data->contributor_name ?? ''));
+    $full_name = cfd_case_study_mail_value($full_name);
+    $creation_date = cfd_case_study_format_mail_date($proposal_data->creation_date ?? NULL);
+    $expected_completion = cfd_case_study_format_mail_date($proposal_data->expected_date_of_completion ?? NULL);
+
+    return array(
+        t('Full Name: @value', array('@value' => $full_name), array('langcode' => $langcode)),
+        t('Email: @value', array('@value' => cfd_case_study_mail_value($user_email)), array('langcode' => $langcode)),
+        t('University/Institute: @value', array('@value' => cfd_case_study_mail_value($proposal_data->university ?? '')), array('langcode' => $langcode)),
+        t('City: @value', array('@value' => cfd_case_study_mail_value($proposal_data->city ?? '')), array('langcode' => $langcode)),
+        t('State: @value', array('@value' => cfd_case_study_mail_value($proposal_data->state ?? '')), array('langcode' => $langcode)),
+        t('Country: @value', array('@value' => cfd_case_study_mail_value($proposal_data->country ?? '')), array('langcode' => $langcode)),
+        t('Project Title: @value', array('@value' => cfd_case_study_mail_value($proposal_data->project_title ?? '')), array('langcode' => $langcode)),
+        t('Date of Proposal: @value', array('@value' => $creation_date), array('langcode' => $langcode)),
+        t('Expected Date of Completion: @value', array('@value' => $expected_completion), array('langcode' => $langcode)),
+    );
+}
+
+/**
+ * Formats proposal date values for email templates.
+ */
+function cfd_case_study_format_mail_date($value)
+{
+    if (empty($value) || !is_numeric($value)) {
+        return 'N/A';
+    }
+
+    return \Drupal::service('date.formatter')->format((int) $value, 'custom', 'd/m/Y');
+}
+
+/**
+ * Normalizes mail placeholder values.
+ */
+function cfd_case_study_mail_value($value)
+{
+    $value = is_string($value) ? trim($value) : $value;
+    return ($value === '' || $value === NULL) ? 'N/A' : (string) $value;
+}

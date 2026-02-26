@@ -1,0 +1,7 @@
+services:
+  cfd_research_migration_global:
+    class: '\Drupal\cfd_research_migration\Services\CfdResearchMigrationGlobalFunction'
+  cfd_research_migration_email:
+    class:  '\Drupal\cfd_research_migration\Services\CfdResearchMigrationGlobalFunction'
+
+  

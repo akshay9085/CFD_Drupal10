@@ -1,0 +1,11 @@
+{% extends "block.html.twig" %}
+{% block content %}
+  {% if site_logo %}
+       <div class="jumbotron "  id="openplc_jumbo" >
+          <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">
+            <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
+          </a>
+          {% endif %}
+          {# <h3 style="display:inline; float:right">OPEN PLC FOSSEE</h4> #}
+       </div>
+ {% endblock %}

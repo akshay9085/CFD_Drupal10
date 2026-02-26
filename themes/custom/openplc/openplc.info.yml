@@ -1,0 +1,25 @@
+name: Openplc Theme
+description: This is Openplc Theme
+type: theme
+base theme: false
+core_version_requirement: ^9 || ^10
+libraries:
+   - openplc/global-styling
+   - openplc/global-scripts
+   - openplc/bootstrap
+   - openplc/fontawesome
+   - openplc/image
+
+regions:
+   header: 'Header'
+   content: 'Content'
+   sidebar_first: 'Left sidebar'
+   sidebar_second: 'Right sidebar'
+   primary_menu: 'Primary menu'
+   secondary_menu: 'Secondary menu'
+   footer: 'Footer'
+   highlighted: 'Highlighted'
+   help: 'Help'
+   breadcrumb: 'Breadcrumb'
+   openplc_corousal: 'OpenPLC Corousal'
+   banner: 'Banner'
