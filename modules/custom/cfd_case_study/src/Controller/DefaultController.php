@@ -84,33 +84,36 @@ public function cfd_case_study_proposal_pending() {
   $query->condition('csp.approval_status', 0);
   $query->orderBy('csp.id', 'DESC');
   $pending_q = $query->execute();
-      while ($pending_data = $pending_q->fetchObject()) {
-    // Create links using modern Link and Url APIs.
-   
-    $approval_url = Link::fromTextAndUrl('Approve', Url::fromRoute('cfd_case_study.proposal_approval_form',['id'=>$pending_data->id]))->toString();
-    $edit_url =  Link::fromTextAndUrl('Edit', Url::fromRoute('cfd_case_study.proposal_edit_form',['id'=>$pending_data->id]))->toString();
-    $mainLink = t('@linkApprove | @linkReject', array('@linkApprove' => $approval_url, '@linkReject' => $edit_url));
+  while ($pending_data = $pending_q->fetchObject()) {
+    $approval_link = Link::fromTextAndUrl(
+      $this->t('Approve'),
+      Url::fromRoute('cfd_case_study.proposal_approval_form', ['id' => $pending_data->id])
+    )->toString();
+
+    $edit_link = Link::fromTextAndUrl(
+      $this->t('Edit'),
+      Url::fromRoute('cfd_case_study.proposal_edit_form', [], [
+        'query' => ['id' => $pending_data->id],
+      ])
+    )->toString();
 
     $pending_rows[] = [
       date('d-m-Y', $pending_data->creation_date),
-      Link::fromTextAndUrl($pending_data->contributor_name, Url::fromRoute('entity.user.canonical', ['user' => $pending_data->uid])),
+      Link::fromTextAndUrl(
+        trim($pending_data->name_title . ' ' . $pending_data->contributor_name),
+        Url::fromRoute('entity.user.canonical', ['user' => $pending_data->uid])
+      )->toString(),
       $pending_data->project_title,
-      ['data' => $mainLink],
+      ['data' => ['#markup' => $approval_link . ' | ' . $edit_link]],
     ];
-  }
-
-  // Check if there are any pending proposals.
-  if (empty($pending_rows)) {
-    \Drupal::messenger()->addStatus(t('There are no pending proposals.'));
-    return '';
   }
 
   // Define table header.
   $pending_header = [
-    t('Date of Submission'),
-    t('Student Name'),
-    t('Title of the Case Study Project'),
-    t('Action'),
+    $this->t('Date of Submission'),
+    $this->t('Student Name'),
+    $this->t('Title of the Case Study Project'),
+    $this->t('Action'),
   ];
 
   // Render the table using renderable arrays.
@@ -118,9 +121,10 @@ public function cfd_case_study_proposal_pending() {
     '#type' => 'table',
     '#header' => $pending_header,
     '#rows' => $pending_rows,
-    // '#attributes' => [
-    //   // 'class' => ['case-study-proposal-pending-table'],
-    // ],
+    '#empty' => $this->t('There are no pending proposals.'),
+    '#attributes' => [
+      'class' => ['case-study-proposal-pending-table'],
+    ],
     '#cache' => [
       'tags' => ['case_study_proposal_list'],
       'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
@@ -129,6 +133,7 @@ public function cfd_case_study_proposal_pending() {
 
   return $output;
 }
+
 
 
 public function cfd_case_study_proposal_all() {
