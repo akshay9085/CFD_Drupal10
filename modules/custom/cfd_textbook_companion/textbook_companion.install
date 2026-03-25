@@ -6,7 +6,7 @@
 function textbook_companion_install()
   {
     // Create tables.
-    drupal_install_schema('textbook_companion');
+    // drupal_install_schema('textbook_companion');
     \Drupal::configFactory()->getEditable('textbook_companion.settings')->set('textbook_companion_emails', '')->save();
     \Drupal::configFactory()->getEditable('textbook_companion.settings')->set('textbook_companion_from_email', '')->save();
     \Drupal::configFactory()->getEditable('textbook_companion.settings')->set('textbook_companion_source_extensions', '')->save();

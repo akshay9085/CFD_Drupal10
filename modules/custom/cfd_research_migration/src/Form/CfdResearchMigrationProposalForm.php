@@ -163,7 +163,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
     $form['faculty_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name of the Faculty Member of your Institution, if any, who helped you with this Research Migration Project'),
-      '#size' => 50,
+      //'#size' => 50,
       '#maxlength' => 50,
       '#validated' => TRUE,
       '#description' => t('<span style="color:red">Maximum character limit is 50</span>')
@@ -171,7 +171,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
       $form['faculty_department'] = array(
       '#type' => 'textfield',
       '#title' => t('Department of the Faculty Member of your Institution, if any, who helped you with this Research Migration Project'),
-      '#size' => 50,
+      //'#size' => 50,
       '#maxlength' => 50,
       '#validated' => TRUE,
       '#description' => t('<span style="color:red">Maximum character limit is 50</span>')
@@ -179,7 +179,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
       $form['faculty_email'] = array(
       '#type' => 'textfield',
       '#title' => t('Email id of the Faculty Member of your Institution, if any, who helped you with this Research Migration Project'),
-      '#size' => 255,
+      //'#size' => 255,
       '#maxlength' => 255,
       '#validated' => TRUE,
       '#description' => t('<span style="color:red">Maximum character limit is 255</span>')
@@ -227,7 +227,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
       $form['other_country'] = [
       '#type' => 'textfield',
       '#title' => t('Other Country'),
-      '#size' => 100,
+      //'#size' => 100,
       '#attributes' => [
       'placeholder' => t('Enter your country name')
       ],
@@ -242,7 +242,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
       $form['other_state'] = [
       '#type' => 'textfield',
       '#title' => t('State'),
-      '#size' => 100,
+      //'#size' => 100,
       '#attributes' => [
       'placeholder' => t('Enter your state/region name')
       ],
@@ -257,7 +257,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
       $form['other_city'] = [
       '#type' => 'textfield',
       '#title' => t('City'),
-      '#size' => 100,
+      //'#size' => 100,
       '#attributes' => [
       'placeholder' => t('Enter your city name')
       ],
@@ -299,7 +299,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
     $form['pincode'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Pincode'),
-      '#size' => 6,
+      //'#size' => 6,
     ];
 
     $form['hr'] = [
@@ -335,7 +335,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
 // $form['project_title'] = array(
 //   '#type' => 'textfield',
 //   '#title' => t('Title of the Research Migration Project'),
-//   '#size' => 80,
+//   //'#size' => 80,
 //   '#maxlength' => 250,
 //   '#description' => t('Maximum character limit is 250'),
 //   '#required' => TRUE,
@@ -352,7 +352,7 @@ class CfdResearchMigrationProposalForm extends FormBase {
 //   $form['project_title'] = array(
 //   '#type' => 'textfield',
 //   '#title' => t('Title of the Research Migration Project'),
-//   '#size' => 80, 
+//   //'#size' => 80, 
 //   '#maxlength' => 250,
 //   '#description' => t('Maximum character limit is 250'),
 //   '#required' => TRUE,
@@ -405,7 +405,7 @@ $form['research_migration_fields'] = [
 // $form['research_migration_fields']['project_title'] = [
 //   '#type' => 'textfield',
 //   '#title' => $this->t('Title of the Research Migration Project'),
-//   '#size' => 80,
+//   //'#size' => 80,
 //   '#maxlength' => 250,
 //   '#description' => $this->t('Maximum character limit is 250'),
 //   '#required' => TRUE,
@@ -434,7 +434,7 @@ elseif ($selected === '1' && empty($list)) {
   $form['research_migration_fields']['project_title'] = [
     '#type' => 'textfield',
     '#title' => $this->t('Title of the Research Migration Project'),
-    '#size' => 80,
+    //'#size' => 80,
     '#maxlength' => 250,
     '#required' => TRUE,
   ];
@@ -444,7 +444,7 @@ elseif ($selected === '0') {
   $form['research_migration_fields']['project_title'] = [
     '#type' => 'textfield',
     '#title' => $this->t('Title of the new Research Migration Project'),
-    '#size' => 80,
+    //'#size' => 80,
     '#maxlength' => 250,
     '#required' => TRUE,
   ];
@@ -454,7 +454,7 @@ elseif ($selected === '0') {
  $form['source_of_the_project'] = array(
   '#type' => 'textfield',
   '#title' => t('Source of the Project'),
-  '#size' => 80,
+  //'#size' => 80,
   '#maxlength' => 200,
   '#required' => TRUE,
   '#attributes' => array(
@@ -503,7 +503,7 @@ elseif ($selected === '0') {
   $form['solver_used_text'] = [
   '#type' => 'textfield',
   '#title' => t('Enter the Solver to be used'),
-  '#size' => 100,
+  //'#size' => 100,
   '#description' => t('Maximum character limit is 50'),
   '#prefix' => '<div id="ajax-solver-text-replace">',
   '#suffix' => '</div>',
@@ -524,7 +524,7 @@ elseif ($selected === '0') {
   
   $form['abstract_file']['abstract_file_path'] = [
   '#type' => 'file',
-  '#size' => 48,
+  //'#size' => 48,
   '#description' => t('<span style="color:red;">Upload filenames with allowed extensions only. No spaces or any special characters allowed in filename.</span>') . '<br />' . $this->t('<span style="color:red;">Allowed file extensions : ') . \Drupal::config('cfd_research_migration.settings')->get('resource_upload_extensions') . '</span>'
   ];
   

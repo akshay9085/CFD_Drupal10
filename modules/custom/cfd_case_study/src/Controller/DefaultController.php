@@ -118,9 +118,9 @@ public function cfd_case_study_proposal_pending() {
     '#type' => 'table',
     '#header' => $pending_header,
     '#rows' => $pending_rows,
-    '#attributes' => [
-      'class' => ['case-study-proposal-pending-table'],
-    ],
+    // '#attributes' => [
+    //   // 'class' => ['case-study-proposal-pending-table'],
+    // ],
     '#cache' => [
       'tags' => ['case_study_proposal_list'],
       'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
