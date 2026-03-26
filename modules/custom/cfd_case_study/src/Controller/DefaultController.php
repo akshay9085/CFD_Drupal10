@@ -5,6 +5,7 @@
 
 namespace Drupal\cfd_case_study\Controller;
 
+use Drupal\cfd_case_study\Form\VerifyCertificatesForm;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -133,7 +134,6 @@ public function cfd_case_study_proposal_pending() {
 
   return $output;
 }
-
 
 
 public function cfd_case_study_proposal_all() {
@@ -375,11 +375,11 @@ public function cfd_case_study_abstract() {
     $url = "";
     if (!empty($abstracts_q)) {
         if (empty($abstracts_q->is_submitted)) {
-            $url = Link::fromTextAndUrl('Upload Case Directory', Url::fromRoute('case_study_project.abstract_code.upload'))->toString();
+            $url = Link::fromTextAndUrl('Upload Case Directory', Url::fromRoute('cfd_case_study.upload_abstract_code_form'))->toString();
         } elseif ($abstracts_q->is_submitted == 1) {
             $url = "";
         } elseif ($abstracts_q->is_submitted == 0) {
-            $url = Link::fromTextAndUrl('Edit', Url::fromRoute('case_study_project.abstract_code.upload'))->toString();
+            $url = Link::fromTextAndUrl('Edit', Url::fromRoute('cfd_case_study.upload_abstract_code_form'))->toString();
         }
     }
 
@@ -418,13 +418,6 @@ public function cfd_case_study_abstract() {
     /* creating zip archive on the server */
     $zip = new \ZipArchive();
     $zip->open($zip_filename, \ZipArchive::CREATE);
-    $query = \Drupal::database()->select('case_study_proposal');
-    $query->fields('case_study_proposal');
-    $query->condition('id', $id);
-    $circuit_simulation_udc_q = $query->execute();
-    $query = \Drupal::database()->select('case_study_proposal');
-    $query->fields('case_study_proposal');
-    $query->condition('id', $id);
     $query = \Drupal::database()->select('case_study_submitted_abstracts_file');
     $query->fields('case_study_submitted_abstracts_file');
     $query->condition('proposal_id', $id);
@@ -447,7 +440,7 @@ public function cfd_case_study_abstract() {
     }
 
     \Drupal::messenger()->addError("There are no case study project in this proposal to download");
-    return new RedirectResponse(Url::fromUserInput('/circuit-simulation-project/full-download/project')->toString());
+    return new RedirectResponse(Url::fromUserInput('/case-study-project/full-download/project')->toString());
   }
 
 
@@ -468,7 +461,7 @@ public function cfd_case_study_abstract() {
 
     if (!$case_study_data) {
       $this->messenger()->addError("Invalid proposal ID.");
-      return new RedirectResponse('/circuit-simulation-project/full-download/project');
+      return new RedirectResponse('/case-study-project/full-download/project');
     }
 
     $CASE_STUDY_PATH = $case_study_data->directory_name . '/';
@@ -477,7 +470,7 @@ public function cfd_case_study_abstract() {
     $zip = new \ZipArchive();
     if ($zip->open($zip_filename, \ZipArchive::CREATE) !== TRUE) {
       $this->messenger()->addError("Could not create ZIP file.");
-      return new RedirectResponse('/circuit-simulation-project/full-download/project');
+      return new RedirectResponse('/case-study-project/full-download/project');
     }
 
     // Get all project files for the proposal
@@ -515,7 +508,7 @@ public function cfd_case_study_abstract() {
     }
     else {
       $this->messenger()->addError("There are no case study project files in this proposal to download.");
-      return new RedirectResponse('/circuit-simulation-project/full-download/project');
+      return new RedirectResponse('/case-study-project/full-download/project');
     }
   }
 
@@ -547,14 +540,14 @@ public function cfd_case_study_completed_proposals_all() {
       $year = date("Y", $record->actual_completion_date);
       $project_title = Link::fromTextAndUrl(
         $record->project_title,
-        Url::fromRoute('cfd_case_study.run_form', ['case_study_run' => $record->id])
+        Url::fromRoute('cfd_case_study.run_form', ['id' => $record->id])
       )->toRenderable();
 
      
 
       $rows[] = [
         $counter,
-        $project_title,
+        ['data' => $project_title],
         $record->contributor_name,
         $record->university,
         $year,
@@ -575,17 +568,17 @@ public function cfd_case_study_completed_proposals_all() {
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No completed proposals found.'),
-      '#cache' => [
-        'tags' => ['case_study_proposal_list'],
-        'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
-      ],
+      // '#cache' => [
+      //   'tags' => ['case_study_proposal_list'],
+      //   'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
+      // ],
     ];
   }
 
-  $output['#cache'] = [
-    'tags' => ['case_study_proposal_list'],
-    'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
-  ];
+  // $output['#cache'] = [
+  //   'tags' => ['case_study_proposal_list'],
+  //   'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
+  // ];
   return $output;
 }
 
@@ -667,12 +660,14 @@ public function cfd_case_study_completed_proposals_all() {
   ");
 
   while ($result = $query->fetchObject()) {
-    $url = Url::fromUri('internal:/case-study-project/download/project-title-file/' . $result->id);
+    $url = Url::fromRoute('cfd_case_study.download_case_study_project_title_files', [], [
+      'query' => ['id' => $result->id],
+    ]);
     $link = Link::fromTextAndUrl($result->project_title_name, $url)->toRenderable();
 
     $preference_rows[] = [
       $i,
-      $link,
+      ['data' => $link],
     ];
     $i++;
   }
@@ -759,85 +754,280 @@ public function cfd_case_study_completed_proposals_all() {
 
 
   public function _list_case_study_certificates() {
-    $user = \Drupal::currentUser();
-    $query_id = \Drupal::database()->query("SELECT id FROM case_study_proposal WHERE approval_status=3 AND uid= :uid", [
-      ':uid' => $user->id()
-      ]);
-    $exist_id = $query_id->fetchObject();
-    //var_dump($exist_id->id);die;
-    if ($exist_id) {
-      if ($exist_id->id) {
-        if ($exist_id->id < 2) {
-          \Drupal::messenger()->addStatus('<strong>You need to propose a <a href="https://esim.fossee.in/case-study-project/proposal">Case Study Proposal</a></strong> or if you have already proposed then your Case Study is under reviewing process');
-          return '';
-        } //$exist_id->id < 3
-        else {
-          $search_rows = [];
-          global $output;
-          $output = '';
-          $query3 = \Drupal::database()->query("SELECT id,project_title,contributor_name FROM case_study_proposal WHERE approval_status=3 AND uid= :uid", [
-            ':uid' => $user->id()
-            ]);
-          while ($search_data3 = $query3->fetchObject()) {
-            if ($search_data3->id) {
-              // @FIXME
-// l() expects a Url object, created from a route name or external URI.
-// $search_rows[] = array(
-// 						$search_data3->project_title,
-// 						$search_data3->contributor_name,
-// 						l('Download Certificate', 'case-study-project/certificates/generate-pdf/' . $search_data3->id)
-// 					);
+    $user = $this->currentUser();
+    $rows = [];
 
-            } //$search_data3->id
-          } //$search_data3 = $query3->fetchObject()
-          if ($search_rows) {
-            $search_header = [
-              'Project Title',
-              'Contributor Name',
-              'Download Certificates',
-            ];
-            // @FIXME
-            // theme() has been renamed to _theme() and should NEVER be called directly.
-            // Calling _theme() directly can alter the expected output and potentially
-            // introduce security issues (see https://www.drupal.org/node/2195739). You
-            // should use renderable arrays instead.
-            // 
-            // 
-            // @see https://www.drupal.org/node/2195739
-            // $output        = theme('table', array(
-            // 					'header' => $search_header,
-            // 					'rows' => $search_rows
-            // 				));
+    $query = \Drupal::database()->select('case_study_proposal', 'csp')
+      ->fields('csp', ['id', 'project_title', 'contributor_name'])
+      ->condition('approval_status', 3)
+      ->condition('uid', $user->id())
+      ->orderBy('id', 'DESC');
 
-            return $output;
-          } //$search_rows
-          else {
-            echo ("Error");
-            return '';
-          }
-        }
-      }
-    } //$exist_id->id
-    else {
-      \Drupal::messenger()->addStatus('<strong>You need to propose a <a href="https://esim.fossee.in/case-study-project/proposal">Case Study Proposal</a></strong> or if you have already proposed then your Case Study is under reviewing process');
-      $page_content = "<span style='color:red;'> No certificate available </span>";
-      return $page_content;
+    foreach ($query->execute() as $proposal) {
+      $download_link = Link::fromTextAndUrl(
+        $this->t('Download Certificate'),
+        Url::fromRoute('cfd_case_study.generate_pdf', [], [
+          'query' => ['id' => $proposal->id],
+        ])
+      )->toString();
+
+      $rows[] = [
+        $proposal->project_title,
+        $proposal->contributor_name,
+        ['data' => ['#markup' => $download_link]],
+      ];
     }
+
+    if (empty($rows)) {
+      return [
+        '#markup' => '<span style="color:red;">' . $this->t('No certificate available.') . '</span>',
+        '#cache' => [
+          'contexts' => ['user'],
+        ],
+      ];
+    }
+
+    return [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Project Title'),
+        $this->t('Contributor Name'),
+        $this->t('Download Certificates'),
+      ],
+      '#rows' => $rows,
+      '#empty' => $this->t('No certificate available.'),
+      '#cache' => [
+        'contexts' => ['user'],
+        'tags' => ['case_study_proposal_list'],
+      ],
+    ];
   }
 
   public function verify_certificates($qr_code = NULL) {
-    \Drupal::moduleHandler()->loadInclude('cfd_case_study', 'inc', 'pdf/verify_certificates');
     if ($qr_code === 'verify_certificates') {
       $qr_code = NULL;
     }
     $qr_code = $qr_code ?: \Drupal::request()->query->get('qr_code');
     if ($qr_code) {
       return [
-        '#markup' => verify_qrcode_fromdb($qr_code),
+        '#markup' => VerifyCertificatesForm::buildVerificationMarkup($qr_code),
       ];
     }
 
-    return \Drupal::formBuilder()->getForm('verify_certificates_form');
+    return \Drupal::formBuilder()->getForm(VerifyCertificatesForm::class);
+  }
+
+  public function generatePdf() {
+    $proposal_id = (int) (\Drupal::routeMatch()->getParameter('id') ?? \Drupal::request()->query->get('id') ?? \Drupal::request()->query->get('proposal_id'));
+    if (!$proposal_id) {
+      $this->messenger()->addError($this->t('Certificate is not available.'));
+      return new RedirectResponse(Url::fromRoute('cfd_case_study._list_case_study_certificates')->toString());
+    }
+
+    $proposal = \Drupal::database()->select('case_study_proposal', 'csp')
+      ->fields('csp')
+      ->condition('approval_status', 3)
+      ->condition('uid', $this->currentUser()->id())
+      ->condition('id', $proposal_id)
+      ->range(0, 1)
+      ->execute()
+      ->fetchObject();
+
+    if (!$proposal) {
+      $this->messenger()->addError($this->t('Certificate is not available.'));
+      return new RedirectResponse(Url::fromRoute('cfd_case_study._list_case_study_certificates')->toString());
+    }
+
+    $module_relative_path = \Drupal::service('extension.list.module')->getPath('cfd_case_study');
+    $module_path = DRUPAL_ROOT . '/' . $module_relative_path;
+    require_once $module_path . '/pdf/fpdf/fpdf.php';
+    require_once $module_path . '/pdf/phpqrcode/qrlib.php';
+
+    $pdf = new \FPDF('L', 'mm', 'Letter');
+    $pdf->AddPage();
+
+    $image_bg = $module_path . '/pdf/images/bg_cert.png';
+    if (is_file($image_bg)) {
+      $pdf->Image($image_bg, 0, 0, $pdf->GetPageWidth(), $pdf->GetPageHeight());
+    }
+
+    $pdf->SetMargins(18, 1, 18);
+    $pdf->Ln(30);
+    $pdf->SetFont('Times', 'I', 18);
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Cell(320, 10, 'This is to certify that', '0', '1', 'C');
+    $pdf->Ln(0);
+
+    $full_name = trim(($proposal->name_title ?? '') . ' ' . ($proposal->contributor_name ?? ''));
+    $pdf->SetTextColor(37, 22, 247);
+    $pdf->Cell(320, 10, $full_name, '0', '1', 'C');
+    $pdf->Ln(0);
+
+    $project_title = wordwrap((string) $proposal->project_title, 60, "\n", TRUE);
+    $university = 'from ' . ($proposal->university ?? '');
+
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->MultiCell(320, 10, $university, '0', 'C');
+    $pdf->Ln(0);
+    $pdf->Cell(320, 10, 'has successfully completed the case study on', '0', '1', 'C');
+    $pdf->Ln(0);
+
+    $pdf->SetTextColor(37, 22, 247);
+    $pdf->SetFont('Times', 'I', 20);
+    $pdf->MultiCell(320, 10, $project_title, '0', 'C');
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Ln(0);
+    $pdf->SetFont('Times', 'I', 18);
+    $pdf->Cell(320, 8, 'using OpenFOAM.', '0', '1', 'C');
+    $pdf->Ln(4);
+    $pdf->Cell(320, 8, 'The work done is available at', '0', '1', 'C');
+    $pdf->Cell(320, 4, '', '0', '1', 'C');
+    $pdf->SetX(110);
+    $pdf->SetFont('Times', 'I', 14);
+    $pdf->SetTextColor(37, 22, 247);
+    $project_url = Url::fromRoute('cfd_case_study.run_form', ['id' => $proposal_id], ['absolute' => TRUE])->toString();
+    $pdf->write(0, $project_url, $project_url);
+    $pdf->Ln(0);
+
+    $qr_string = $this->getOrCreateCertificateQrCode($proposal_id);
+    $qr_path = sys_get_temp_dir() . '/case-study-qr-' . uniqid('', TRUE) . '.png';
+    $verify_url = Url::fromRoute('cfd_case_study.verify_certificates_verify_certificates', [], [
+      'absolute' => TRUE,
+      'query' => ['qr_code' => $qr_string],
+    ])->toString();
+    \QRcode::png($verify_url, $qr_path);
+
+    $pdf->SetY(85);
+    $pdf->SetX(320);
+    $pdf->Ln(10);
+
+    $sign1 = $module_path . '/pdf/images/sign1.png';
+    $sign2 = $module_path . '/pdf/images/sign2.png';
+    if (is_file($sign1)) {
+      $pdf->Image($sign1, $pdf->GetX() + 75, $pdf->GetY() + 45, 60, 0);
+    }
+    if (is_file($sign2)) {
+      $pdf->Image($sign2, $pdf->GetX() + 160, $pdf->GetY() + 45, 75, 0);
+    }
+    if (is_file($qr_path)) {
+      $pdf->Image($qr_path, $pdf->GetX() + 15, $pdf->GetY() + 75, 30, 0);
+    }
+
+    $fossee = $module_path . '/pdf/images/fossee.png';
+    $mhrd = $module_path . '/pdf/images/mhrd.png';
+    $nia_logo = $module_path . '/pdf/images/nia.png';
+    $ftr_line = $module_path . '/pdf/images/ftr_line.png';
+    $ftr_line_2 = $module_path . '/pdf/images/ftr_line_2.png';
+
+    $start_date = 1606761000;
+    $end_date = 1640975364;
+    $approval_date = (int) ($proposal->approval_date ?? 0);
+    if ($approval_date > $start_date && $approval_date < $end_date) {
+      if (is_file($fossee)) {
+        $pdf->Image($fossee, $pdf->GetX() + 55, $pdf->GetY() + 80, 50, 0);
+      }
+      if (is_file($nia_logo)) {
+        $pdf->Image($nia_logo, $pdf->GetX() + 135, $pdf->GetY() + 80, 50, 0);
+      }
+      if (is_file($mhrd)) {
+        $pdf->Image($mhrd, $pdf->GetX() + 200, $pdf->GetY() + 80, 40, 0);
+      }
+      $pdf->Ln(2);
+      if (is_file($ftr_line)) {
+        $pdf->Image($ftr_line, $pdf->GetX() + 15, $pdf->GetY() + 105, 220, 0);
+      }
+      $pdf->Ln(3);
+      if (is_file($ftr_line_2)) {
+        $pdf->Image($ftr_line_2, $pdf->GetX() + 25, $pdf->GetY() + 106, 190, 0);
+      }
+    }
+    else {
+      if (is_file($fossee)) {
+        $pdf->Image($fossee, $pdf->GetX() + 100, $pdf->GetY() + 80, 50, 0);
+      }
+      if (is_file($mhrd)) {
+        $pdf->Image($mhrd, $pdf->GetX() + 180, $pdf->GetY() + 80, 40, 0);
+      }
+      $pdf->Ln(4);
+      if (is_file($ftr_line)) {
+        $pdf->Image($ftr_line, $pdf->GetX() + 15, $pdf->GetY() + 105, 220, 0);
+      }
+    }
+
+    $pdf->SetFont('Times', 'I', 15);
+    $pdf->SetLeftMargin(40);
+    $pdf->Ln(62);
+    $pdf->Cell(320, 8, $qr_string, '0', '1', 'L');
+    $pdf->SetFont('Arial', 'I', 8);
+    $pdf->SetTextColor(0, 0, 0);
+
+    $filename = str_replace(' ', '-', (string) $proposal->contributor_name) . '-CFD-case-study-Certificate.pdf';
+    $pdf_path = sys_get_temp_dir() . '/case-study-certificate-' . $proposal_id . '-' . uniqid('', TRUE) . '.pdf';
+    $pdf->Output($pdf_path, 'F');
+
+    if (is_file($qr_path)) {
+      @unlink($qr_path);
+    }
+
+    $response = new BinaryFileResponse($pdf_path);
+    $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->deleteFileAfterSend(TRUE);
+    return $response;
+  }
+
+  protected function getOrCreateCertificateQrCode($proposal_id) {
+    $record = \Drupal::database()->select('case_study_qr_code', 'csq')
+      ->fields('csq', ['qr_code'])
+      ->condition('proposal_id', (int) $proposal_id)
+      ->range(0, 1)
+      ->execute()
+      ->fetchObject();
+
+    if ($record && !empty($record->qr_code) && $record->qr_code !== 'null') {
+      return $record->qr_code;
+    }
+
+    $qr_code = $this->generateCertificateQrCode();
+
+    if ($record) {
+      \Drupal::database()->update('case_study_qr_code')
+        ->fields(['qr_code' => $qr_code])
+        ->condition('proposal_id', (int) $proposal_id)
+        ->execute();
+    }
+    else {
+      \Drupal::database()->insert('case_study_qr_code')
+        ->fields([
+          'proposal_id' => (int) $proposal_id,
+          'qr_code' => $qr_code,
+        ])
+        ->execute();
+    }
+
+    return $qr_code;
+  }
+
+  protected function generateCertificateQrCode($length = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters_length = strlen($characters);
+    $random_string = '';
+
+    do {
+      $random_string = '';
+      for ($i = 0; $i < $length; $i++) {
+        $random_string .= $characters[random_int(0, $characters_length - 1)];
+      }
+
+      $exists = (bool) \Drupal::database()->select('case_study_qr_code', 'csq')
+        ->fields('csq', ['proposal_id'])
+        ->condition('qr_code', $random_string)
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
+    } while ($exists);
+
+    return $random_string;
   }
 
 }
