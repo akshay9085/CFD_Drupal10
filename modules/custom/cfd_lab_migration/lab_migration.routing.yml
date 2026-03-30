@@ -12,6 +12,8 @@ lab_migration.proposal_pending:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_proposal_pending'
   requirements:
     _permission: 'lab migration manage proposal'
+  options:
+    no_cache: TRUE
 lab_migration.solution_proposal_pending:
   path: /lab-migration/manage-proposal/pending-solution-proposal
   defaults:
@@ -19,6 +21,8 @@ lab_migration.solution_proposal_pending:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_solution_proposal_pending'
   requirements:
     _permission: 'lab migration manage proposal'
+  options:
+    no_cache: TRUE
 lab_migration.proposal_pending_solution:
   path: /lab-migration/manage-proposal/pending-solution
   defaults:
@@ -26,6 +30,8 @@ lab_migration.proposal_pending_solution:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_proposal_pending_solution'
   requirements:
     _permission: 'lab migration manage proposal'
+  options:
+    no_cache: TRUE
 lab_migration.proposal_all:
   path: /lab-migration/manage-proposal/all
   defaults:
@@ -33,6 +39,8 @@ lab_migration.proposal_all:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_proposal_all'
   requirements:
     _permission: 'lab migration manage proposal'
+  options:
+    no_cache: TRUE
 lab_migration.category_all:
   path: /lab-migration/manage-proposal/category
   defaults:
@@ -40,36 +48,38 @@ lab_migration.category_all:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_category_all'
   requirements:
     _permission: 'lab migration manage proposal'
+  options:
+    no_cache: TRUE
 lab_migration.category_edit_form:
-  path: /lab-migration/manage-proposal/category/edit/{id}
+  path: /lab-migration/manage-proposal/category/edit/{proposal_id}
   defaults:
     _title: 'Edit Category'
     _form: \Drupal\lab_migration\Form\LabMigrationCategoryEditForm
   requirements:
     _permission: 'lab migration edit proposal'
 lab_migration.proposal_approval_form:
-  path: /lab-migration/manage-proposal/approve/{id}
+  path: /lab-migration/manage-proposal/approve
   defaults:
     _title: 'Approve Proposal'
     _form: \Drupal\lab_migration\Form\LabMigrationProposalApprovalForm
   requirements:
     _permission: 'lab migration manage proposal'
 lab_migration.solution_proposal_approval_form:
-  path: /lab-migration/manage-proposal/solution-proposal-approve/{id}
+  path: /lab-migration/manage-proposal/solution-proposal-approve/{proposal_id}
   defaults:
     _title: 'Approve Solution Proposal'
     _form: \Drupal\lab_migration\Form\LabMigrationSolutionProposalApprovalForm
   requirements:
     _permission: 'lab migration manage proposal'
 lab_migration.proposal_edit_form:
-  path: /lab-migration/manage-proposal/edit/{id}
+  path: /lab-migration/manage-proposal/edit/{proposal_id}
   defaults:
     _title: 'Edit Proposal'
     _form: \Drupal\lab_migration\Form\LabMigrationProposalEditForm
   requirements:
     _permission: 'lab migration manage proposal'
 lab_migration.proposal_status_form:
-  path: /lab-migration/manage-proposal/status/{id}
+  path: /lab-migration/manage-proposal/status/{proposal_id}
   defaults:
     _title: 'Proposal Status'
     _form: \Drupal\lab_migration\Form\LabMigrationProposalStatusForm
@@ -82,8 +92,10 @@ lab_migration.proposal_open:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_proposal_open'
   requirements:
     _permission: 'lab migration propose solution'
+  options:
+    no_cache: TRUE
 lab_migration.solution_proposal_form:
-  path: /lab-migration/show-proposal/{id}
+  path: /lab-migration/show-proposal/{proposal_id}
   defaults:
     _title: 'Lab Migration Solution Proposal'
     _form: \Drupal\lab_migration\Form\LabMigrationSolutionProposalForm
@@ -96,6 +108,8 @@ lab_migration.code_approval:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_code_approval'
   requirements:
     _permission: 'lab migration approve code'
+  options:
+    no_cache: TRUE
 lab_migration.code_approval_form:
   path: /lab-migration/code-approval/approve/{solution_id}
   defaults:
@@ -131,6 +145,8 @@ lab_migration.list_experiments:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_list_experiments'
   requirements:
     _permission: 'lab migration upload code'
+  options:
+    no_cache: TRUE
 lab_migration.upload_code_form:
   path: /lab-migration/code/upload
   defaults:
@@ -145,6 +161,8 @@ lab_migration.upload_code_delete:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_upload_code_delete'
   requirements:
     _permission: 'lab migration upload code'
+  options:
+    no_cache: TRUE
 lab_migration.download_solution_file:
   path: /lab-migration/download/file/{solution_file_id}
   defaults:
@@ -152,13 +170,17 @@ lab_migration.download_solution_file:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_solution_file'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.download_problem_statement:
-  path: /lab-migration/download/problem-statement/{id}
+  path: /lab-migration/download/problem-statement/{proposal_id}
   defaults:
     _title: 'Download Problem Statement'
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_problem_statement'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.download_solution:
   path: /lab-migration/download/solution/{solution_id}
   defaults:
@@ -166,6 +188,8 @@ lab_migration.download_solution:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_solution'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.download_experiment:
   path: /lab-migration/download/experiment/{experiment_id}
   defaults:
@@ -173,6 +197,8 @@ lab_migration.download_experiment:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_experiment'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.download_lab:
   path: /lab-migration/download/lab/{lab_id}
   defaults:
@@ -180,6 +206,8 @@ lab_migration.download_lab:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_lab'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.download_full_experiment:
   path: /lab-migration/full-download/experiment
   defaults:
@@ -187,6 +215,8 @@ lab_migration.download_full_experiment:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_full_experiment'
   requirements:
     _permission: 'lab migration approve code'
+  options:
+    no_cache: TRUE
 lab_migration.download_full_lab:
   path: /lab-migration/full-download/lab/{lab_id}
   defaults:
@@ -194,6 +224,8 @@ lab_migration.download_full_lab:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_full_lab'
   requirements:
     _permission: 'lab migration approve code'
+  options:
+    no_cache: TRUE
 lab_migration.completed_labs_all:
   path: /lab-migration/completed-labs
   defaults:
@@ -201,6 +233,8 @@ lab_migration.completed_labs_all:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_completed_labs_all'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.experiments_list:
   path: /lab-migration/experiments-list/{experiment_id}
   defaults:
@@ -215,6 +249,8 @@ lab_migration.labs_progress_all:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_labs_progress_all'
   requirements:
     _permission: 'lab migration download code'
+  options:
+    no_cache: TRUE
 lab_migration.run_form:
   path: /lab-migration/lab-migration-run/{lab_id}/{experiment_id}
   defaults:
@@ -229,6 +265,8 @@ lab_migration.download_lab_pdf:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_download_lab_pdf'
   requirements:
     _permission: 'lab migration generate lab'
+  options:
+    no_cache: TRUE
 lab_migration.delete_lab_pdf:
   path: /lab-migration/delete-lab
   defaults:
@@ -236,6 +274,8 @@ lab_migration.delete_lab_pdf:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::lab_migration_delete_lab_pdf'
   requirements:
     _permission: 'lab migration approve code'
+  options:
+    no_cache: TRUE
 lab_migration.settings_form:
   path: /admin/settings/lab-migration
   defaults:
@@ -256,6 +296,8 @@ lab_migration._list_all_lm_certificates:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::_list_all_lm_certificates'
   requirements:
     _permission: 'Create custom Certificate'
+  options:
+    no_cache: TRUE
 lab_migration.certificate_form:
   path: /lab-migration/certificate/lm-proposer/form
   defaults:
@@ -264,7 +306,7 @@ lab_migration.certificate_form:
   requirements:
     _permission: 'Create custom Certificate'
 lab_migration.certificate_edit_form:
-  path: /lab-migration/certificate/lm-proposer/form/edit/{id}
+  path: /lab-migration/certificate/lm-proposer/form/edit/{proposal_id}
   defaults:
     _title: 'Edit Proposer Certificate'
     _form: \Drupal\lab_migration\Form\LabMigrationCertificateEditForm
@@ -278,14 +320,14 @@ lab_migration.certificate_participation_form:
   requirements:
     _permission: 'Create custom Certificate'
 lab_migration.certificate_participation_edit_form:
-  path: /lab-migration/certificate/lm-participation/form/edit/{id}
+  path: /lab-migration/certificate/lm-participation/form/edit/{proposal_id}
   defaults:
     _title: 'Edit Certificates for Participation'
     _form: \Drupal\lab_migration\Form\LabMigrationCertificateParticipationEditForm
   requirements:
     _permission: 'Create custom Certificate'  
 lab_migration.generate_lm_pdf:
-  path: /lab-migration/certificate/generate-pdf/{id}
+  path: /lab-migration/certificate/generate-pdf/{proposal_id}
   defaults:
     _title: 'Download Certificate'
     _form: \Drupal\lab_migration\Form\GenerateLmPdf
@@ -298,6 +340,8 @@ lab_migration.verify_lab_migration_certificates:
     _controller: '\Drupal\lab_migration\Controller\DefaultController::verify_lab_migration_certificates'
   requirements:
     _permission: 'Verify custom Certificate of lab'
+  options:
+    no_cache: TRUE
 lab_migration.download_syllabus_copy:
   path: /lab-migration/download/syllabus-copy-file
   defaults:

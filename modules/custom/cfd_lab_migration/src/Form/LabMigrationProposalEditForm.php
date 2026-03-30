@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+
 class LabMigrationProposalEditForm extends FormBase {
 
   /**
@@ -29,7 +30,7 @@ class LabMigrationProposalEditForm extends FormBase {
     // $proposal_id = (int) arg(3);
     $route_match = \Drupal::routeMatch();
 
-$proposal_id = (int) $route_match->getParameter('id');
+$proposal_id = (int) $route_match->getParameter('proposal_id');
     //$proposal_q = \Drupal::database()->query("SELECT * FROM {lab_migration_proposal} WHERE id = %d", $proposal_id);
     $query = \Drupal::database()->select('lab_migration_proposal');
     $query->fields('lab_migration_proposal');
@@ -74,20 +75,29 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => t('Name of the Proposer'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#default_value' => $proposal_data->name,
     ];
-    $form['email_id'] = [
-      '#type' => 'item',
-      '#title' => t('Email'),
-      '#markup' => $user_data->getEmail(),
-    ];
+    // $form['email_id'] = [
+    //   '#type' => 'item',
+    //   '#title' => t('Email'),
+    //   '#markup' => $user_data->getEmail(),
+    // ];
+    
+    $current_user = \Drupal::currentUser();
+$user_data = \Drupal\user\Entity\User::load($current_user->id());
+
+$form['email_id'] = [
+  '#type' => 'item',
+  '#title' => t('Email'),
+  '#markup' => $user_data ? $user_data->getEmail() : '',
+];
     $form['contact_ph'] = [
       '#type' => 'textfield',
       '#title' => t('Contact No.'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 15,
       '#required' => TRUE,
       '#default_value' => $proposal_data->contact_ph,
@@ -102,7 +112,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['university'] = [
       '#type' => 'textfield',
       '#title' => t('University/Institute'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#default_value' => $proposal_data->university,
@@ -122,7 +132,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_country'] = [
       '#type' => 'textfield',
       '#title' => t('Other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#default_value' => $proposal_data->country,
       '#attributes' => [
         'placeholder' => t('Enter your country name')
@@ -138,7 +148,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_state'] = [
       '#type' => 'textfield',
       '#title' => t('State other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your state/region name')
         ],
@@ -154,7 +164,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_city'] = [
       '#type' => 'textfield',
       '#title' => t('City other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your city name')
         ],
@@ -197,19 +207,27 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['pincode'] = [
       '#type' => 'textfield',
       '#title' => t('Pincode'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 6,
       '#default_value' => $proposal_data->pincode,
       '#attributes' => [
         'placeholder' => 'Insert pincode of your city/ village....'
         ],
     ];
-   
-   
+    // $form['operating_system'] = [
+    //   '#type' => 'textfield',
+    //   '#default_value' => $proposal_data->operating_system,
+    //   '#title' => t('Operating System'),
+    // ];
+    $form['syllabus_link'] = [
+      '#type' => 'item',
+      '#markup' => $proposal_data->syllabus_link,
+      '#title' => t('Syllabus Link'),
+    ];
     $form['lab_title'] = [
       '#type' => 'textfield',
       '#title' => t('Title of the Lab'),
-      '#size' => 100,
+      // '#size' => 100,
       '#maxlength' => 255,
       '#required' => TRUE,
       '#default_value' => $proposal_data->lab_title,
@@ -249,7 +267,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
         $form['lab_experiment_update' . $experiment_data->id] = [
           '#type' => 'textfield',
           '#title' => t('Title of the Experiment ') . $counter,
-          '#size' => 100,
+          // '#size' => 100,
           '#default_value' => $experiment_title,
         ];
         $namefield = "lab_experiment_update" . $experiment_data->id;
@@ -266,7 +284,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
         $form['lab_experiment_insert' . $counter] = [
           '#type' => 'textfield',
           '#title' => t('Title of the Experiment ') . $counter,
-          '#size' => 100,
+          // '#size' => 100,
           '#required' => FALSE,
           '#default_value' => $experiment_title,
         ];
@@ -479,6 +497,8 @@ $proposal_id = (int) $route_match->getParameter('id');
       'city' => $v['city'],
       'pincode' => $v['pincode'],
       'state' => $v['all_state'],
+      'operating_system' => $v['operating_system'],
+      'version' => $form_state->getValue(['version']),
       'lab_title' => $v['lab_title'],
       'solution_display' => $solution_display,
       'directory_name' => $directory_name,
@@ -617,4 +637,3 @@ $proposal_id = (int) $route_match->getParameter('id');
 
 
 }
-?>

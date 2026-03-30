@@ -96,8 +96,6 @@ cfd_case_study.completed_proposals_all:
     _controller: '\Drupal\cfd_case_study\Controller\DefaultController::cfd_case_study_completed_proposals_all'
   requirements:
     _permission: 'Case Study download code'
-  options:
-    no_cache: TRUE
 cfd_case_study.progress_all:
   path: /case-study-project/case-study-progress
   defaults:

@@ -248,8 +248,9 @@ public function cfd_case_study_proposal_all() {
       'approval_status',
     ]);
     $query->condition('csp.approval_status', [0, 1, 2], 'NOT IN');
-    $query->orderBy('csp.approval_status', 'DESC');
+  
     $query->orderBy('csp.id', 'DESC');
+      $query->orderBy('csp.approval_status', 'DESC');
     $proposal_q = $query->execute();
     foreach ($proposal_q as $proposal_data) {
       $approval_status = '';
@@ -568,17 +569,17 @@ public function cfd_case_study_completed_proposals_all() {
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No completed proposals found.'),
-      // '#cache' => [
-      //   'tags' => ['case_study_proposal_list'],
-      //   'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
-      // ],
+      '#cache' => [
+        'tags' => ['case_study_proposal_list'],
+        'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
+      ],
     ];
   }
 
-  // $output['#cache'] = [
-  //   'tags' => ['case_study_proposal_list'],
-  //   'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
-  // ];
+  $output['#cache'] = [
+    'tags' => ['case_study_proposal_list'],
+    'contexts' => ['user.permissions', 'url.path', 'url.query_args'],
+  ];
   return $output;
 }
 

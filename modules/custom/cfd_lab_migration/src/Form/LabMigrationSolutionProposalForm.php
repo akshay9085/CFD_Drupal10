@@ -45,47 +45,60 @@ $user_entity = \Drupal\user\Entity\User::load($current_user_id);
          ->condition('id', $proposal_id)
          ->execute()
          ->fetchObject();
-   
-      //  if (!$proposal_data) {
-      //    \Drupal::messenger()->addError($this->t('Invalid proposal.'));
-      //    return new RedirectResponse(Url::fromRoute('<front>')->toString());
-      //  }
-   
-       // Proposer name link.
-       $name_link = Link::fromTextAndUrl(
-         $proposal_data->name_title . ' ' . $proposal_data->name,
-         Url::fromRoute('entity.user.canonical', ['user' => $proposal_data->uid])
-       )->toString();
-   
-       $form['name'] = [
-         '#type' => 'item',
-         '#markup' => $name_link,
-         '#title' => $this->t('Proposer Name'),
-       ];
-   
-       $form['lab_title'] = [
-         '#type' => 'item',
-         '#markup' => $proposal_data->lab_title,
-         '#title' => $this->t('Title of the Lab'),
-       ];
-   
-       // Fetch experiments.
-       $experiment_q = \Drupal::database()
-         ->select('lab_migration_experiment', 'lme')
-         ->fields('lme')
-         ->condition('proposal_id', $proposal_id)
-         ->execute();
-   
-       $experiment_html = '';
-       foreach ($experiment_q as $experiment_data) {
-         $experiment_html .= $experiment_data->title . '<br/>';
-       }
-   
-       $form['experiment'] = [
-         '#type' => 'item',
-         '#markup' => $experiment_html,
-         '#title' => $this->t('Experiment List'),
-       ];
+
+
+         $uid = (int) ($proposal_data->uid ?? 0);
+
+if ($uid > 0) {
+  $link = Link::fromTextAndUrl(
+    $proposal_data->name_title . ' ' . $proposal_data->name,
+    Url::fromRoute('entity.user.canonical', ['user' => $uid])
+  )->toString();
+}
+else {
+  $link = $this->t('@name', [
+    '@name' => $proposal_data->name_title . ' ' . $proposal_data->name,
+  ]);
+}
+
+$form['name'] = [
+  '#type' => 'item',
+  '#markup' => $link,
+  '#title' => $this->t('Proposer Name'),
+];
+
+
+$form['lab_title'] = [
+  '#type' => 'item',
+  '#markup' => $proposal_data->lab_title ?? $this->t('Not available'),
+  '#title' => $this->t('Title of the Lab'),
+];
+
+
+$experiment_q = \Drupal::database()
+  ->select('lab_migration_experiment', 'lme')
+  ->fields('lme', ['title'])
+  ->condition('proposal_id', $proposal_id)
+  ->execute()
+  ->fetchCol();
+
+$experiment_html = '';
+
+if (!empty($experiment_q)) {
+  foreach ($experiment_q as $title) {
+    $experiment_html .= $title . '<br>';
+  }
+}
+else {
+  $experiment_html = $this->t('No experiments found.');
+}
+
+$form['experiment'] = [
+  '#type' => 'item',
+  '#markup' => $experiment_html,
+  '#title' => $this->t('Experiment List'),
+];
+
    
        // Form fields.
        $form['solution_provider_name_title'] = [
@@ -340,31 +353,94 @@ $user_entity = \Drupal\user\Entity\User::load($current_user_id);
 
     $result = \Drupal::database()->query($query, $args);
     \Drupal::messenger()->addmessage("We have received your application. We will get back to you soon.", 'status');
-    // /* sending email */
-    // $email_to = $user->mail;
-    // $from = $config->get('lab_migration_from_email', '');
-    // $bcc = $config->get('lab_migration_emails', '');
-    // $cc = $config->get('lab_migration_cc_emails', '');
-    // $param['solution_proposal_received']['proposal_id'] = $proposal_id;
-    // $param['solution_proposal_received']['user_id'] = $user->uid;
-    // $param['solution_proposal_received']['headers'] = [
-    //   'From' => $from,
-    //   'MIME-Version' => '1.0',
-    //   'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
-    //   'Content-Transfer-Encoding' => '8Bit',
-    //   'X-Mailer' => 'Drupal',
-    //   'Cc' => $cc,
-    //   'Bcc' => $bcc,
-    // ];
-    // if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to, language_default(), $param, $from, TRUE)) {
-    //   \Drupal::messenger()->addmessage('Error sending email message.', 'error');
-    // }
-    /* sending email */
-    /* $email_to = $config->get('lab_migration_emails', '');
-    if (!drupal_mail('lab_migration', 'solution_proposal_received', $email_to , language_default(), $param, $config->get('lab_migration_from_email', NULL), TRUE))
-    \Drupal::messenger()->addmessage('Error sending email message.', 'error');*/
-    // drupal_goto('lab-migration/open-proposal');
+     /* sending email */
+    $email_to = $user->getEmail();
+
+/* Config */
+$config = \Drupal::config('lab_migration.settings');
+
+$from = $config->get('lab_migration_from_email');
+$bcc  = $config->get('lab_migration_emails');
+$cc   = $config->get('lab_migration_cc_emails');
+
+/* Mandatory fallback */
+if (empty($from)) {
+  $from = \Drupal::config('system.site')->get('mail');
+}
+
+/* Params */
+$params['solution_proposal_received'] = [
+  'proposal_id' => $proposal_id,
+  'user_id' => $user->id(),
+  'headers' => [
+    'From' => $from,
+    'MIME-Version' => '1.0',
+    'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+    'Content-Transfer-Encoding' => '8Bit',
+    'X-Mailer' => 'Drupal',
+    'Cc' => $cc,
+    'Bcc' => $bcc,
+  ],
+];
+
+/* Language */
+$langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+/* Send mail */
+$mailManager = \Drupal::service('plugin.manager.mail');
+
+$result = $mailManager->mail(
+  'lab_migration',
+  'solution_proposal_received',
+  $email_to,
+  $langcode,
+  $params,
+  $from,
+  TRUE
+);
+
+if (empty($result['result'])) {
+  \Drupal::messenger()->addError('Error sending email message.');
+}
+else {
+  \Drupal::messenger()->addStatus('Email sent successfully.');
+}
+
+    /* Sending email */
+
+$email_to = $config->get('lab_migration_emails');
+
+$from = $config->get('lab_migration_from_email');
+
+/* Fallback if from is empty */
+if (empty($from)) {
+  $from = \Drupal::config('system.site')->get('mail');
+}
+
+/* Language */
+$langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+/* Send mail */
+$mailManager = \Drupal::service('plugin.manager.mail');
+
+$result = $mailManager->mail(
+  'lab_migration',
+  'solution_proposal_received',
+  $email_to,
+  $langcode,
+  $param,
+  $from,
+  TRUE
+);
+
+if (empty($result['result'])) {
+  \Drupal::messenger()->addError('Error sending email message.');
+}
+$response = new RedirectResponse('<front>');
+    $response->send();
   }
+
+
 
 }
 ?>

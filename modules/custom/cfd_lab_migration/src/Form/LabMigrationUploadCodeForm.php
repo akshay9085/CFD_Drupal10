@@ -530,30 +530,44 @@ $response->send();
     \Drupal::messenger()->addmessage('Solution uploaded successfully.', 'status');
 
     // /* sending email */
-    // $email_to = $user->mail;
-    // $from = $this->configFactory->get('lab_migration.settings')->get('lab_migration_from_email');
-    // // $from = $config->get('lab_migration_from_email', '');
-    // // $bcc = $config->get('lab_migration_emails', '');
-    // $bcc = $this->configFactory->get('lab_migration.settings')->get('lab_migration_email');
-    // $cc = $this->configFactory->get('lab_migration.settings')->get('lab_migration_cc_email');
+      /* sending email */
+     $user_data = \Drupal::entityTypeManager()->getStorage('user')->load($proposal_data->uid);
+$email_to = $user_data->getEmail();
+    $from = \Drupal::config('lab_migration.settings')->get('lab_migration_from_email');
+$bcc = \Drupal::config('lab_migration.settings')->get('lab_migration_emails');
+$cc = \Drupal::config('lab_migration.settings')->get('lab_migration_cc_emails');
 
-    // // $cc = $config->get('lab_migration_cc_emails', '');
-    // $param['solution_uploaded']['solution_id'] = $solution_id;
-    // $param['solution_uploaded']['user_id'] = $user->uid;
-    // $param['solution_uploaded']['headers'] = [
-    //   'From' => $from,
-    //   'MIME-Version' => '1.0',
-    //   'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
-    //   'Content-Transfer-Encoding' => '8Bit',
-    //   'X-Mailer' => 'Drupal',
-    //   'Cc' => $cc,
-    //   'Bcc' => $bcc,
-    // ];
+    $params['solution_uploaded']['solution_id'] = $solution_id;
+$params['solution_uploaded']['user_id'] = $user->uid;
 
-    // if (!drupal_Email('lab_migration', 'solution_uploaded', $email_to, language_default(), $param, $from, TRUE)) {
-    //   \Drupal::database()->addmessage('Error sending email message.', 'error');
-    // }
-    $response = new RedirectResponse(Url::fromRoute('lab_migration.upload_code_form')->toString());
+$params['solution_uploaded']['headers'] = [
+  'From' => $from,
+  'MIME-Version' => '1.0',
+  'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+  'Content-Transfer-Encoding' => '8Bit',
+  'X-Mailer' => 'Drupal',
+  'Cc' => $cc,
+  'Bcc' => $bcc,
+];
+
+$langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+$mail_manager = \Drupal::service('plugin.manager.mail');
+
+$result = $mail_manager->mail(
+  'lab_migration',
+  'solution_uploaded',
+  $email_to,
+  $langcode,
+  $params,
+  NULL,
+  TRUE
+);
+
+if (!$result['result']) {
+  \Drupal::messenger()->addError('Error sending email message.');
+}
+
+   $response = new RedirectResponse(Url::fromRoute('lab_migration.upload_code_form')->toString());
    // Send the redirect response
       $response->send();
       }

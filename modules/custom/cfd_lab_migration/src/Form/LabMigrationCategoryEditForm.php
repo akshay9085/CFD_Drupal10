@@ -43,8 +43,15 @@ $proposal_id = (int) $route_match->getParameter('id');
       else {
         \Drupal::messenger()->addmessage(t('Invalid proposal selected. Please try again.'), 'error');
         // RedirectResponse('lab-migration/manage-proposal');
-        $response = new RedirectResponse(Url::fromRoute('lab_migration.category_edit_form')->toString());
-  
+        // $response = new RedirectResponse(Url::fromRoute('lab_migration.category_edit_form')->toString());
+
+$response = new RedirectResponse(
+  Url::fromRoute('lab_migration.category_edit_form', [
+    'proposal_id' => $proposal_id
+  ])->toString()
+);
+
+return $response;
 // Send the redirect response
 $response->send();
 
@@ -57,8 +64,15 @@ $response->send();
       \Drupal::messenger()->addmessage(t('Invalid proposal selected. Please try again.'), 'error');
       // RedirectResponse('lab-migration/manage-proposal');
 
-$response = new RedirectResponse(Url::fromRoute('lab_migration.category_edit_form')->toString());
-  
+// $response = new RedirectResponse(Url::fromRoute('lab_migration.category_edit_form')->toString());
+
+$response = new RedirectResponse(
+  Url::fromRoute('lab_migration.category_edit_form', [
+    'proposal_id' => $proposal_id
+  ])->toString()
+);
+
+return $response;
 // Send the redirect response
 $response->send();
 
